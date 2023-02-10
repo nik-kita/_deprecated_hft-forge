@@ -13,6 +13,7 @@ specifiers:
   '@nrwl/node': 15.6.3
   '@nrwl/webpack': 15.6.3
   '@nrwl/workspace': 15.6.3
+  '@reduxjs/toolkit': ^1.9.2
   '@types/jest': 28.1.1
   '@types/node': 18.7.1
   '@typescript-eslint/eslint-plugin': ^5.36.1
@@ -48,6 +49,7 @@ devDependencies:
   '@nrwl/node': 15.6.3_3lhc6ymv3242w4o3lfsvtrvj7q
   '@nrwl/webpack': 15.6.3_6czderadkxwkv6g37dancullhm
   '@nrwl/workspace': 15.6.3_oy7hgmlo6357d5kkcjbkfgtg4q
+  '@reduxjs/toolkit': 1.9.2
   '@types/jest': 28.1.1
   '@types/node': 18.7.1
   '@typescript-eslint/eslint-plugin': 5.51.0_zsll5hqugnkcrqry7wilrq4a2e
@@ -2203,6 +2205,23 @@ packages:
     dependencies:
       esquery: 1.4.0
       typescript: 4.8.4
+    dev: true
+
+  /@reduxjs/toolkit/1.9.2:
+    resolution: {integrity: sha512-5ZAZ7hwAKWSii5T6NTPmgIBUqyVdlDs+6JjThz6J6dmHLDm6zCzv2OjHIFAi3Vvs1qjmXU0bm6eBojukYXjVMQ==}
+    peerDependencies:
+      react: ^16.9.0 || ^17.0.0 || ^18
+      react-redux: ^7.2.1 || ^8.0.2
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-redux:
+        optional: true
+    dependencies:
+      immer: 9.0.19
+      redux: 4.2.1
+      redux-thunk: 2.4.2_redux@4.2.1
+      reselect: 4.1.7
     dev: true
 
   /@sinclair/typebox/0.24.51:
@@ -4784,6 +4803,10 @@ packages:
     dev: true
     optional: true
 
+  /immer/9.0.19:
+    resolution: {integrity: sha512-eY+Y0qcsB4TZKwgQzLaE/lqYMlKhv5J9dyd2RhhtGhNo2njPXDqU9XPfcNfa3MIDsdtZt5KlkIsirlo4dHsWdQ==}
+    dev: true
+
   /immutable/4.2.4:
     resolution: {integrity: sha512-WDxL3Hheb1JkRN3sQkyujNlL/xRjAo3rJtaU5xeufUauG66JdMr32bLj4gF+vWl84DIA3Zxw7tiAjneYzRRw+w==}
     dev: true
@@ -6843,6 +6866,20 @@ packages:
       picomatch: 2.3.1
     dev: true
 
+  /redux-thunk/2.4.2_redux@4.2.1:
+    resolution: {integrity: sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==}
+    peerDependencies:
+      redux: ^4
+    dependencies:
+      redux: 4.2.1
+    dev: true
+
+  /redux/4.2.1:
+    resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
+    dependencies:
+      '@babel/runtime': 7.20.13
+    dev: true
+
   /reflect-metadata/0.1.13:
     resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
 
@@ -6903,6 +6940,10 @@ packages:
 
   /requires-port/1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
+    dev: true
+
+  /reselect/4.1.7:
+    resolution: {integrity: sha512-Zu1xbUt3/OPwsXL46hvOOoQrap2azE7ZQbokq61BQfiXvhewsKDwhMeZjTX9sX0nvw1t/U5Audyn1I9P/m9z0A==}
     dev: true
 
   /resolve-cwd/3.0.0:
