@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    // "preserveSymlinks": true,
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
@@ -19,14 +18,17 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@hft-forge/types/forge-store": [
-        "libs/types/src/forge-store/index.ts"
+      "@hft-forge/forge-store": [
+        "libs/forge-store/src/index.ts"
       ],
       "@hft-forge/types/common": [
         "libs/types/src/common/index.ts"
       ],
-      "@hft-forge/forge-store": [
-        "libs/forge-store/src/index.ts"
+      "@hft-forge/types/forge-store": [
+        "libs/types/src/forge-store/index.ts"
+      ],
+      "@hft-forge/utils": [
+        "libs/utils/src/index.ts"
       ]
     }
   },

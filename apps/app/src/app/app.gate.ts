@@ -1,9 +1,7 @@
 import { Logger } from "@nestjs/common";
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { WebSocket } from 'ws';
-import { faker } from '@faker-js/faker';
-
-const genClientIdName = () => faker.helpers.unique(() => `${faker.animal.bird()} ${faker.name.fullName()}`);
+import { genUniqueStr } from '@hft-forge/utils';
 
 @WebSocketGateway()
 export class AppGate implements OnGatewayConnection, OnGatewayDisconnect {
@@ -14,7 +12,7 @@ export class AppGate implements OnGatewayConnection, OnGatewayDisconnect {
     };
 
     handleConnection(client: WebSocket) {
-        const name = genClientIdName();
+        const name = genUniqueStr();
 
         this.clients.wsName.set(client, name);
         this.clients.nameWs.set(name, client);
