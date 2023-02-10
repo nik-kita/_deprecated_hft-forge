@@ -1,5 +1,5 @@
-export interface IMonitor {
-    have: string,
-    want: string,
-    currency_pair: `${IMonitor['have']}/${IMonitor['want']}`,
+export interface IMonitor<T extends string = string, U extends string = string> {
+    have: T,
+    want: U,
+    currency_pair: `${T}/${U}`,
 }
