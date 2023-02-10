@@ -8,12 +8,16 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-ws": "^9.3.8",
+    "@nestjs/websockets": "^9.3.8",
+    "@types/ws": "^8.5.4",
     "axios": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@nrwl/eslint-plugin-nx": "15.6.3",
