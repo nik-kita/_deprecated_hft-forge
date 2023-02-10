@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { ForgeState } from '@hft-forge/types/forge-store';
 import { monitorReducer } from './features/forge-store.monitor.feature';
 
+type InitOptions = Parameters<typeof configureStore<ForgeState>>[0];
 
-export const FORGE_STORE = configureStore({
+export const initForgeStore = (options: Partial<InitOptions> = {}) => configureStore<ForgeState>({
     reducer: {
         monitor: monitorReducer,
     },
+    ...options,
 });
-
-export type ForgeState = ReturnType<typeof FORGE_STORE.getState>
-export type ForgeDispatch = typeof FORGE_STORE.dispatch

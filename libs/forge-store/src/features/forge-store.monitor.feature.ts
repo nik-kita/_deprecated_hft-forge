@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ForgeState } from "../forge-store.store";
-import { IMonitor } from "@hft-forge/types/forge-store";
+import { ForgeState, IMonitor } from "@hft-forge/types/forge-store";
 
 
 const initialState: IMonitor = {

@@ -1,5 +1,6 @@
+import { ForgeState } from '@hft-forge/types/forge-store';
 import { setMonitorAction } from '../features/forge-store.monitor.feature';
-import { ForgeState, FORGE_STORE } from '../index';
+import { initForgeStore } from '../index';
 
 
 const getForgeStateFixture = (state: Partial<ForgeState> = {}): ForgeState => {
@@ -14,6 +15,12 @@ const getForgeStateFixture = (state: Partial<ForgeState> = {}): ForgeState => {
 };
 
 describe('ForgeStore', () => {
+    let FORGE_STORE: ReturnType<typeof initForgeStore>;
+
+    beforeEach(() => {
+        FORGE_STORE = initForgeStore();
+    });
+
     it('Should export all needed members', () => {
         expect(FORGE_STORE).toBeDefined();
     });

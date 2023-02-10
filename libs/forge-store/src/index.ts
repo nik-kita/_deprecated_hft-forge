@@ -1,5 +1,3 @@
 export {
-    ForgeDispatch,
-    ForgeState,
-    FORGE_STORE,
+    initForgeStore,
 } from './forge-store.store';
