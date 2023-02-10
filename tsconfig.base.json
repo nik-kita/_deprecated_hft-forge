@@ -24,6 +24,9 @@
       ],
       "@hft-forge/types/common": [
         "libs/types/src/common/index.ts"
+      ],
+      "@hft-forge/forge-store": [
+        "libs/forge-store/src/index.ts"
       ]
     }
   },
