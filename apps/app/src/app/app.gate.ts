@@ -3,6 +3,7 @@ import { genUniqueStr, SubMessageLikeMethod } from '@hft-forge/utils';
 import { Logger } from "@nestjs/common";
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { WebSocket } from 'ws';
+import { ForgeStoreService } from './services/forge-store.service';
 
 @WebSocketGateway()
 export class AppGate implements
@@ -14,6 +15,8 @@ export class AppGate implements
         wsName: new WeakMap<WebSocket, string>(),
         nameWs: new Map<string, WebSocket>(),
     };
+
+    constructor(private forgeStoreService: ForgeStoreService) {}
 
     @SubMessageLikeMethod()
     forgeState() {

@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppGate } from '../app/app.gate';
+import { ForgeStoreService } from '../app/services/forge-store.service';
 
 
 describe(AppGate.name, () => {
@@ -8,7 +9,10 @@ describe(AppGate.name, () => {
 
     beforeAll(async () => {
         app = await Test.createTestingModule({
-            providers: [AppGate],
+            providers: [AppGate, {
+                provide: ForgeStoreService,
+                useValue: {},
+            }],
         }).compile();
     });
 
