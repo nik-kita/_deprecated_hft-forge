@@ -1,1 +1,1 @@
-export type AppGateEvent = 'forge-state';
+export type AppGateEvent = 'forgeState';

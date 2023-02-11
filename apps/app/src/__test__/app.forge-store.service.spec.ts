@@ -24,7 +24,7 @@ describe(ForgeStoreService.name, () => {
     });
 
     it('Should notify all subscribers about store changes', () => {
-        const event: AppGateEvent = 'forge-state';
+        const event: AppGateEvent = 'forgeState';
         const forgeStoreService = app.get<ForgeStoreService>(ForgeStoreService);
         const firstDispatch: IMonitor = {
             have: 'USDT',

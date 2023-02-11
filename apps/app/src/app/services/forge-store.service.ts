@@ -37,7 +37,7 @@ export class ForgeStoreService {
 
     private genMessage() {
         const state: GateMessage<AppGateEvent, ForgeState> = {
-            event: 'forge-state',
+            event: 'forgeState',
             data: this.store.getState(),
         };
 
