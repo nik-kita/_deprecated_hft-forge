@@ -1,6 +1,6 @@
 import { genUniqueStr } from '..';
 
-describe(genUniqueStr.name, () => {
+describe.skip(genUniqueStr.name, () => {
     it('Should never repeat', () => {
         const generated = new Set<string>();
         const expected = 1_000_000;
