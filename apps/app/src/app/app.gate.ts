@@ -1,7 +1,7 @@
 import { AppGateEvent } from '@hft-forge/types/app';
 import { genUniqueStr, SubMessageLikeMethod } from '@hft-forge/utils';
 import { Logger } from "@nestjs/common";
-import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
+import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { WebSocket } from 'ws';
 import { ForgeStoreService } from './services/forge-store.service';
 
@@ -19,8 +19,8 @@ export class AppGate implements
     constructor(private forgeStoreService: ForgeStoreService) {}
 
     @SubMessageLikeMethod()
-    forgeState() {
-        // TODO
+    forgeState(@ConnectedSocket() client) {
+        this.forgeStoreService.addSubscriber(client, this.clients.wsName.get(client));
     }
 
 
@@ -35,6 +35,7 @@ export class AppGate implements
     handleDisconnect(client: WebSocket, ...args: any[]) {
         const name = this.clients.wsName.get(client);
 
+        this.forgeStoreService.rmSubscriber(name);
         this.clients.nameWs.delete(name);
         this.logger.debug(`- ${name}`);
     }
