@@ -10,11 +10,33 @@
     "importHelpers": true,
     "target": "es2021",
     "module": "esnext",
-    "lib": ["es2021", "dom"],
+    "lib": [
+      "es2021",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@hft-forge/forge-store": [
+        "libs/forge-store/src/index.ts"
+      ],
+      "@hft-forge/types/common": [
+        "libs/types/src/common/index.ts"
+      ],
+      "@hft-forge/types/app": [
+        "libs/types/src/app/index.ts"
+      ],
+      "@hft-forge/types/forge-store": [
+        "libs/types/src/forge-store/index.ts"
+      ],
+      "@hft-forge/utils": [
+        "libs/utils/src/index.ts"
+      ]
+    }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

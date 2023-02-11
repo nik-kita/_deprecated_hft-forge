@@ -2,18 +2,27 @@
   "name": "hft-forge",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "test": "npx nx run-many --target=test",
+    "test:verbose": "npx nx run-many --target=test -- --verbose",
+    "lint": "npx nx run-many --target=lint",
+    "lint:fix": "npx nx run-many --targe=lint --fix"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-ws": "^9.3.8",
+    "@nestjs/websockets": "^9.3.8",
+    "@types/ws": "^8.5.4",
     "axios": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@nrwl/eslint-plugin-nx": "15.6.3",
@@ -23,6 +32,7 @@
     "@nrwl/node": "15.6.3",
     "@nrwl/webpack": "15.6.3",
     "@nrwl/workspace": "15.6.3",
+    "@reduxjs/toolkit": "^1.9.2",
     "@types/jest": "28.1.1",
     "@types/node": "18.7.1",
     "@typescript-eslint/eslint-plugin": "^5.36.1",

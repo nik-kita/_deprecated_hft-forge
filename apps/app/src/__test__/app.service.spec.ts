@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { AppService } from '../app/app.service';
+import { AppService } from '../app/services/app.service';
 
 
 describe('AppService', () => {

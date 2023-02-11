@@ -7,7 +7,12 @@
             "path": "../apps",
         },
         {
-            "path": "../libs",
+            "path": "../libs/forge-store",
         },
+        {
+            "path": "../libs/types/src/forge-store",
+            "name": "types/forge-store"
+        }
     ],
+    "settings": {},
 }
