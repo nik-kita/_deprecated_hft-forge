@@ -18,8 +18,20 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@hft-forge/forge-store": [
+        "libs/forge-store/src/index.ts"
+      ],
       "@hft-forge/types/common": [
         "libs/types/src/common/index.ts"
+      ],
+      "@hft-forge/types/app": [
+        "libs/types/src/app/index.ts"
+      ],
+      "@hft-forge/types/forge-store": [
+        "libs/types/src/forge-store/index.ts"
+      ],
+      "@hft-forge/utils": [
+        "libs/utils/src/index.ts"
       ]
     }
   },
