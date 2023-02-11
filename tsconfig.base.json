@@ -21,11 +21,14 @@
       "@hft-forge/forge-store": [
         "libs/forge-store/src/index.ts"
       ],
-      "@hft-forge/types/common": [
-        "libs/types/src/common/index.ts"
+      "@hft-forge/http": [
+        "libs/http/src/index.ts"
       ],
       "@hft-forge/types/app": [
         "libs/types/src/app/index.ts"
+      ],
+      "@hft-forge/types/common": [
+        "libs/types/src/common/index.ts"
       ],
       "@hft-forge/types/forge-store": [
         "libs/types/src/forge-store/index.ts"
