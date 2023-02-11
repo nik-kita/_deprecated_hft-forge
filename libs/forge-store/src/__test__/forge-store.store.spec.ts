@@ -1,6 +1,5 @@
 import { ForgeState } from '@hft-forge/types/forge-store';
-import { setMonitorAction } from '../features/forge-store.monitor.feature';
-import { initForgeStore } from '../index';
+import { initForgeStore, actionSetMonitor } from '../index';
 
 
 const getForgeStateFixture = (state: Partial<ForgeState> = {}): ForgeState => {
@@ -32,7 +31,7 @@ describe('ForgeStore', () => {
     it('Should dispatch setMonitorAction and change state', () => {
         const expected = getForgeStateFixture();
 
-        FORGE_STORE.dispatch(setMonitorAction({ ...expected.monitor }));
+        FORGE_STORE.dispatch(actionSetMonitor({ ...expected.monitor }));
 
         const actual = FORGE_STORE.getState();
 
@@ -43,7 +42,7 @@ describe('ForgeStore', () => {
         let updatesCounter = 0;
 
         FORGE_STORE.subscribe(() => ++updatesCounter);
-        FORGE_STORE.dispatch(setMonitorAction());
+        FORGE_STORE.dispatch(actionSetMonitor());
 
         expect(updatesCounter).toBe(1);
     });

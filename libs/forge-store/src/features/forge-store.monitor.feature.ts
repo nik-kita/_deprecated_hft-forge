@@ -17,7 +17,7 @@ export const monitorSlice = createSlice({
 });
 
 export const {
-    setMonitorAction,
+    setMonitorAction: actionSetMonitor,
 } = monitorSlice.actions;
 export const selectMonitor = ({ monitor }: ForgeState) => monitor;
-export const monitorReducer = monitorSlice.reducer;
+export const reducerForMonitor = monitorSlice.reducer;
