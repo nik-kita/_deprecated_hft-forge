@@ -20,8 +20,8 @@ describe(KuSignGeneratorService.name, () => {
             }, null, 4),
             source: {
                 method: 'GET',
-                endpoint: '/test',
-                body: {},
+                url: '/test',
+                body: {} as any,
                 params: { foo: 'bar' },
             } as const,
         },
@@ -36,7 +36,7 @@ describe(KuSignGeneratorService.name, () => {
             }, null, 4),
             source: {
                 method: 'POST',
-                endpoint: '/test2',
+                url: '/test2',
             } as const,
         }
     ])('Should generate $expectedStr from $sourceStr', ({ expectedStr, source }) => {

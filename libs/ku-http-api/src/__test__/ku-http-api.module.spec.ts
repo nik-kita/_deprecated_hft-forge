@@ -1,21 +1,23 @@
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { KuHttpApiModule, KuSignGeneratorService } from '..';
+import { KuReq } from '../lib/ku-http-api.ku-req.service';
 
 
-describe('AppController', () => {
+describe(KuHttpApiModule.name, () => {
   let app: TestingModule;
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
-        imports: [KuHttpApiModule],
+        imports: [KuHttpApiModule, ConfigModule.forRoot({ isGlobal: true })],
     }).compile();
   });
 
-  describe('getData', () => {
-    it('should return "Welcome to app!"', () => {
+    it('Should import/export all providers', () => {
       const kuSignGeneratorService = app.get<KuSignGeneratorService>(KuSignGeneratorService);
-
+      const kuReq = app.get<KuReq>(KuReq);
+      
       expect(kuSignGeneratorService).toBeDefined();
-    });
+      expect(kuReq).toBeDefined();
   });
 });

@@ -18,11 +18,11 @@ export class KuSignGeneratorService {
             API_SECRET,
         } = credentials;
         const {
-            method, endpoint, params, body,
+            method, url, params, body,
         } = options;
         const _endpoint = params && Object.keys(params).length
-            ? `${endpoint}?${qsFromObj(params)}`
-            : endpoint;
+            ? `${url}?${qsFromObj(params)}`
+            : url;
         const timestamp = Date.now();
         const stringToSign = this.stringToSign(_endpoint, timestamp, method, body);
         const signature = this.signature(stringToSign, API_SECRET);
