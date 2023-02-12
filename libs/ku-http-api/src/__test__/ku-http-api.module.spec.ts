@@ -18,6 +18,8 @@ describe(KuHttpApiModule.name, () => {
       const kuReq = app.get<KuReq>(KuReq);
       
       expect(kuSignGeneratorService).toBeDefined();
+      expect(kuSignGeneratorService).toBeInstanceOf(KuSignGeneratorService);
       expect(kuReq).toBeDefined();
   });
+
 });
