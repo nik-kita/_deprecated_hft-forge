@@ -58,7 +58,7 @@ export class KuSignGeneratorService {
 
     private signature(payload: string, apiSecret: string) {
         const hmac = forge.hmac.create();
-        
+
         hmac.start('sha256', apiSecret);
         hmac.update(payload);
         
