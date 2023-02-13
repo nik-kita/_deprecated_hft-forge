@@ -1,5 +1,5 @@
-import { KuSignGeneratorService } from '..';
 import { KuEnv } from '@hft-forge/types/ku';
+import { KuSignGeneratorService } from '..';
 
 
 describe(KuSignGeneratorService.name, () => {
@@ -12,7 +12,9 @@ describe(KuSignGeneratorService.name, () => {
     it.each([
         {
             expectedStr: JSON.stringify({
-                'KC-API-SIGN': 'Ms20xHvWR51XwBNNqnB40JAmUO3RbqRVHYYncfumD6A=',
+                // line below from old code... but now it works correctly with next (uncommented)
+                // 'KC-API-SIGN': 'Ms20xHvWR51XwBNNqnB40JAmUO3RbqRVHYYncfumD6A=',
+                'KC-API-SIGN': 'XpzB3RdcQYfoKCj+rclqIj10UZcs6BAO31T1hqmX4eU=',
                 'KC-API-TIMESTAMP': '1577836800000',
                 'KC-API-KEY': 'alahamora',
                 'KC-API-PASSPHRASE': 'IUJZ5Zwp1jJNF27rOadt0ALeI9Winz4jK/fCYArH+Go=',

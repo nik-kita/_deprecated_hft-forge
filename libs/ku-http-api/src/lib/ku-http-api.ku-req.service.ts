@@ -1,6 +1,5 @@
 import { HttpService } from '@hft-forge/http';
-import { HttpMethod } from '@hft-forge/types/common';
-import { KuEnv, KuReq, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { KuEnv, KuReq, KuReq_order_book_level_2, KU_BASE_URL, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
@@ -33,32 +32,20 @@ export class KuReqService {
     }
 
     private async getFullOrderBook(symbol: string) {
-        const method: HttpMethod = 'GET';
-        const query = { symbol };
-        const endpoint = KU_GET_ENDPOINT.order_book.full;
-        const signOptions: KuReq<
-            'GET',
-            string,
-            object
-        > = {
-            endpoint,
-            method,
-            params: query,
+        const payload: KuReq_order_book_level_2 = {
+            endpoint: KU_GET_ENDPOINT.order_book.full,
+            method: 'GET',
+            query: { symbol },
         };
-        const headers = this.signGeneratorService.generateHeaders(signOptions, this.keys);
-        const url = `${KU_BASE_URL}${endpoint}`;
-
-
-        return this.httpService.req(url, {
-            headers,
-            method,
-            query,
-        });
+        
+        return this.sendRequest(payload);
     }
 
-    private checkEnv() {
-        if (Object.values(this.keys).some((v) => !v)) {
-            throw new Error(`Provide ${KU_ENV_KEYS} to for sign request!`);
-        }
+    private sendRequest(payload: KuReq<any, any, any, any>) {
+        const headers = this.signGeneratorService.generateHeaders(payload, this.keys);
+        const url = `${KU_BASE_URL}${payload.endpoint}`;
+        const { endpoint, ...options } = { ...payload, headers };
+
+        return this.httpService.req(url, options);
     }
 }
