@@ -5,6 +5,7 @@
   "scripts": {
     "test": "npx nx run-many --target=test",
     "test:verbose": "npx nx run-many --target=test -- --verbose",
+    "test:failed": "npx nx run-many --target=test -- --verbose --onlyFailures",
     "lint": "npx nx run-many --target=lint",
     "lint:fix": "npx nx run-many --targe=lint --fix"
   },

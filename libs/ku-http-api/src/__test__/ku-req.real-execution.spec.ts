@@ -31,8 +31,6 @@ describe(`${KuReq.name} (if it possible - test real http execution)`, () => {
 
         const { body, statusCode } = await kuReq.get().order_book.full('BTC-USDT');
 
-        console.log(await body.json());
-
         expect(statusCode).toBeLessThan(400);
     });
 });

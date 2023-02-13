@@ -53,7 +53,7 @@ describe(AppGate.name, () => {
         forgeStoreService.dispatch(actionSetMonitor({
             have: 'TEST',
             want: 'SUCCESS',
-            currency_pair: 'TEST/SUCCESS',
+            currency_pair: 'TEST-SUCCESS',
         }));
 
         expect(pseudoClient.send).toBeCalledTimes(2);
@@ -62,7 +62,11 @@ describe(AppGate.name, () => {
         
         expect(spyForgeStore_private_subscribers.size).toBe(0);
 
-        forgeStoreService.dispatch(actionSetMonitor());
+        forgeStoreService.dispatch(actionSetMonitor({
+            have: 'USDT',
+            want: 'BTC',
+            currency_pair: 'USDT-BTC',
+        }));
 
         expect(pseudoClient.send).toBeCalledTimes(2);
     });

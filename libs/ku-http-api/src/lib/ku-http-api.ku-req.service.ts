@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
 import { HttpMethod } from '@hft-forge/types/common';
-import { KuEnv, KuSignOptions, KU_BASE_URL, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { KuEnv, KuSignOptions, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import { KuSignGeneratorService } from './ku-http-api.sign-generator.service';
@@ -14,11 +14,17 @@ export class KuReq {
         private signGeneratorService: KuSignGeneratorService,
         private configService: ConfigService<KuEnv>,
     ) {
-        this.keys = {
+        const keys = {
             API_KEY: this.configService.get('API_KEY'),
             API_SECRET: this.configService.get('API_SECRET'),
             API_PASSPHRASE: this.configService.get('API_PASSPHRASE'),
         };
+
+        if (Object.values(keys).some((v) => !v)) {
+            throw new Error(`Provide ${KU_ENV_KEYS} to for sign request!`);
+        }
+
+        this.keys = keys;
     }
 
     public get() {

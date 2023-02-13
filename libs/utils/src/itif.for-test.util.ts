@@ -5,6 +5,9 @@ import { config } from 'dotenv';
 type NeedEnvType = {
     needEnv: { envFilePath: string, envVariables: string[] },
 };
+type CustomConditionType = {
+    customCondition: boolean | ((...args: any[]) => boolean),
+}
 
 function isRequiredEnvVariablesProvided(options: NeedEnvType['needEnv']) {
     const { envFilePath, envVariables } = options;
@@ -22,20 +25,33 @@ function isRequiredEnvVariablesProvided(options: NeedEnvType['needEnv']) {
     return true;
 }
 
-export function itif(condition: NeedEnvType): Global.ItBase {
-    let predicate = false;
+export function itif(condition: {
+    skip_cli_ITIF?: boolean,
+} & (NeedEnvType | CustomConditionType)): Global.ItBase {
+    const { skip_cli_ITIF = false } = condition;
 
-    if (process.env.ITIF !== 'true') {
-        console.warn(`Test is skipped. Run with ITIF=true to enable their execution:\nITIF=true npx nx test ...`);
+    if (process.env.ITIF !== 'true' && !skip_cli_ITIF) {
+        console.warn(`Test is skipped. Run with ITIF=true to enable their execution.\nExample:\n\nITIF=true npm run test`);
     } else {
-        const { needEnv } = condition;
+        const {
+            needEnv,
+            customCondition,
+        } = condition as Partial<NeedEnvType> & Partial<CustomConditionType>;
 
         if (needEnv) {
-            predicate = isRequiredEnvVariablesProvided(needEnv);
+            if (!isRequiredEnvVariablesProvided(needEnv)) return it.skip;
         }
+
+        if (customCondition !== undefined) {
+            const predicate = typeof customCondition === 'boolean'
+                ? customCondition
+                : customCondition();
+            
+            if (!predicate) return it.skip;
+        }
+
+        return it;
     }
 
-    return predicate ? it : it.skip;
+    return it.skip;
 }
-
-
