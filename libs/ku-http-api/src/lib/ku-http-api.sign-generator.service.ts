@@ -4,7 +4,6 @@ import { qsFromObj } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import * as forge from 'node-forge';
 
-
 @Injectable()
 export class KuSignGeneratorService {
     public generateHeaders(options: KuSignOptions, credentials: {
@@ -18,11 +17,11 @@ export class KuSignGeneratorService {
             API_SECRET,
         } = credentials;
         const {
-            method, url, params, body,
+            method, endpoint, params, body,
         } = options;
         const _endpoint = params && Object.keys(params).length
-            ? `${url}?${qsFromObj(params)}`
-            : url;
+            ? `${endpoint}?${qsFromObj(params)}`
+            : endpoint;
         const timestamp = Date.now();
         const stringToSign = this.stringToSign(_endpoint, timestamp, method, body);
         const signature = this.signature(stringToSign, API_SECRET);
@@ -30,7 +29,7 @@ export class KuSignGeneratorService {
 
         return {
             'KC-API-SIGN': signature,
-            'KC-API-TIMESTAMP': String(timestamp),
+            'KC-API-TIMESTAMP': timestamp.toString(),
             'KC-API-KEY': API_KEY,
             'KC-API-PASSPHRASE': signedPassphrase,
             'KC-API-KEY-VERSION': '2',
@@ -61,7 +60,10 @@ export class KuSignGeneratorService {
 
         hmac.start('sha256', apiSecret);
         hmac.update(payload);
-        
-        return forge.util.encode64(hmac.digest().bytes());
+
+        const modern = forge.util.encode64(hmac.digest().bytes());
+
+        return modern;
     }
 }
+

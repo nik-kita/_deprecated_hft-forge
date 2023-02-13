@@ -1,5 +1,6 @@
 import { HttpService } from '@hft-forge/http';
-import { KuSignOptions, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { HttpMethod } from '@hft-forge/types/common';
+import { KuSignOptions, KU_BASE_URL, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import { KuSignGeneratorService } from './ku-http-api.sign-generator.service';
@@ -22,21 +23,32 @@ export class KuReq {
         };
     }
 
-    public get = {
-        order_book: {
-            full: this.getFullOrderBook,
-        }
-    };
+    public get() {
 
-    private getFullOrderBook(symbol: string) {
+        return {
+            order_book: {
+                full: this.getFullOrderBook.bind(this) as typeof this.getFullOrderBook,
+            },
+        };
+    }
+
+    private async getFullOrderBook(symbol: string) {
+        const method: HttpMethod = 'GET';
+        const query = { symbol };
+        const endpoint = KU_GET_ENDPOINT.order_book.full;
         const signOptions: KuSignOptions = {
-            url: KU_GET_ENDPOINT.order_book.full,
-            method: 'GET',
-            params: { symbol },
+            endpoint,
+            method,
+            params: query,
         };
         const headers = this.signGeneratorService.generateHeaders(signOptions, this.keys);
-        const { url, ...reqOptions } = { ...signOptions, headers };
+        const url = `${KU_BASE_URL}${endpoint}`;
 
-        return this.httpService.req(url, reqOptions);
+
+        return this.httpService.req(url, {
+            headers,
+            method,
+            query,
+        });
     }
 }
