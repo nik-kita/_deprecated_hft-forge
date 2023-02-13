@@ -1,5 +1,5 @@
 import type { request } from 'undici';
-import { HttpMethod } from '../common/http-method.const';
+import { HttpMethod } from '../../common/http-method.const';
 
 
 export type KuSignOptions = {

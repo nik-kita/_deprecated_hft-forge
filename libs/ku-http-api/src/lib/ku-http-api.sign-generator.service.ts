@@ -1,16 +1,12 @@
 import { HttpMethod } from '@hft-forge/types/common';
-import { KuSignOptions } from '@hft-forge/types/ku';
+import { KuEnv, KuSignOptions } from '@hft-forge/types/ku';
 import { qsFromObj } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import * as forge from 'node-forge';
 
 @Injectable()
 export class KuSignGeneratorService {
-    public generateHeaders(options: KuSignOptions, credentials: {
-        API_KEY: string,
-        API_SECRET: string,
-        API_PASSPHRASE: string,
-    }) {
+    public generateHeaders(options: KuSignOptions, credentials: KuEnv) {
         const {
             API_KEY,
             API_PASSPHRASE,

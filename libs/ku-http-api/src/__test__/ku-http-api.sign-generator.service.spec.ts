@@ -1,8 +1,9 @@
 import { KuSignGeneratorService } from '..';
+import { KuEnv } from '@hft-forge/types/ku';
 
 
 describe(KuSignGeneratorService.name, () => {
-    const keys = {
+    const keys: KuEnv = {
         API_PASSPHRASE: 'hello world',
         API_SECRET: 'sim-sim',
         API_KEY: 'alahamora',
