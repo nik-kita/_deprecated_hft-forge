@@ -29,9 +29,14 @@ describe(`${KuReqService.name} (if it possible - test real http execution)`, () 
         expect(kuReq).toBeInstanceOf(KuReqService);
         expect((kuReq as any).signGeneratorService).toBeInstanceOf(KuSignGeneratorService);
 
-        const { body, statusCode } = await kuReq.get().order_book.full('BTC-USDT');
+        const { body, statusCode, context, headers } = await kuReq.get().order_book.full('BTC-USDT');
+
+        if (statusCode >= 400) {
+            console.warn(context);
+            console.warn(headers);
+            console.warn(await body.json());
+        }
 
         expect(statusCode).toBeLessThan(400);
-        expect(body).toBeDefined();
     });
 });

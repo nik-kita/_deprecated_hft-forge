@@ -13,10 +13,10 @@ export class KuSignGeneratorService {
             API_SECRET,
         } = credentials;
         const {
-            method, endpoint, params, body,
+            method, endpoint, query, body,
         } = options;
-        const _endpoint = params && Object.keys(params).length
-            ? `${endpoint}?${qsFromObj(params)}`
+        const _endpoint = query && Object.keys(query).length
+            ? `${endpoint}?${qsFromObj(query)}`
             : endpoint;
         const timestamp = Date.now();
         const stringToSign = this.stringToSign(_endpoint, timestamp, method, body);
