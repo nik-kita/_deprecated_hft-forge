@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
 import { HttpMethod } from '@hft-forge/types/common';
-import { KuEnv, KuSignOptions, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { KuEnv, KuReq, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
@@ -8,7 +8,7 @@ import { KuSignGeneratorService } from './ku-http-api.sign-generator.service';
 
 @Injectable()
 @BindThis()
-export class KuReq {
+export class KuReqService {
     private keys: KuEnv;
 
     constructor(
@@ -36,7 +36,11 @@ export class KuReq {
         const method: HttpMethod = 'GET';
         const query = { symbol };
         const endpoint = KU_GET_ENDPOINT.order_book.full;
-        const signOptions: KuSignOptions = {
+        const signOptions: KuReq<
+            'GET',
+            string,
+            object
+        > = {
             endpoint,
             method,
             params: query,

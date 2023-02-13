@@ -7,6 +7,7 @@
     "test:verbose": "npx nx run-many --target=test -- --verbose",
     "test:failed": "npx nx run-many --target=test -- --verbose --onlyFailures",
     "test:fresh": "npx nx run-many --target=test -- --verbose --onlyChanged",
+    "test:full": "ITIF=true npx nx run-many --target=test --skip-nx-cache --verbose",
     "lint": "npx nx run-many --target=lint",
     "lint:fix": "npx nx run-many --targe=lint --fix"
   },

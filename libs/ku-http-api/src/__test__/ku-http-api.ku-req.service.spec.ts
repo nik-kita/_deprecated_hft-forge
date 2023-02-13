@@ -3,10 +3,10 @@ import { itif } from '@hft-forge/utils';
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { join } from 'path';
-import { KuHttpApiModule, KuReq, KuSignGeneratorService } from '..';
+import { KuHttpApiModule, KuReqService, KuSignGeneratorService } from '..';
 
 
-describe(`${KuReq.name} (if it possible - test real http execution)`, () => {
+describe(`${KuReqService.name} (if it possible - test real http execution)`, () => {
     itif({
         needEnv: {
             envFilePath: '.test.env',
@@ -24,9 +24,9 @@ describe(`${KuReq.name} (if it possible - test real http execution)`, () => {
 
         expect(sGen).toBeInstanceOf(KuSignGeneratorService);
 
-        const kuReq = app.get<KuReq>(KuReq);
+        const kuReq = app.get<KuReqService>(KuReqService);
 
-        expect(kuReq).toBeInstanceOf(KuReq);
+        expect(kuReq).toBeInstanceOf(KuReqService);
         expect((kuReq as any).signGeneratorService).toBeInstanceOf(KuSignGeneratorService);
 
         const { body, statusCode } = await kuReq.get().order_book.full('BTC-USDT');
