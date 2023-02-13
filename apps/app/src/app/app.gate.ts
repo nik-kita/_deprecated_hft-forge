@@ -20,7 +20,7 @@ export class AppGate implements
 
     @SubMessageLikeMethod()
     forgeState(@ConnectedSocket() client) {
-        this.forgeStoreService.addSubscriber(client, this.clients.wsName.get(client));
+        this.forgeStoreService.addSubscriber(client, this.clients.wsName.get(client)!);
     }
 
 
@@ -35,8 +35,8 @@ export class AppGate implements
     handleDisconnect(client: WebSocket, ...args: any[]) {
         const name = this.clients.wsName.get(client);
 
-        this.forgeStoreService.rmSubscriber(name);
-        this.clients.nameWs.delete(name);
+        this.forgeStoreService.rmSubscriber(name!);
+        this.clients.nameWs.delete(name!);
         this.logger.debug(`- ${name}`);
     }
 }

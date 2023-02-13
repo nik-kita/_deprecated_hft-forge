@@ -5,7 +5,7 @@ import { ForgeState, IMonitor } from "@hft-forge/types/forge-store";
 const initialState: IMonitor = {
     have: '',
     want: '',
-    currency_pair: '/',
+    currency_pair: '-',
 };
 
 export const monitorSlice = createSlice({

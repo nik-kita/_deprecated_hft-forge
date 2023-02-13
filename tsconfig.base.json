@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    "strictNullChecks": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -24,11 +25,17 @@
       "@hft-forge/http": [
         "libs/http/src/index.ts"
       ],
+      "@hft-forge/ku-http-api": [
+        "libs/ku-http-api/src/index.ts"
+      ],
       "@hft-forge/types/app": [
         "libs/types/src/app/index.ts"
       ],
       "@hft-forge/types/common": [
         "libs/types/src/common/index.ts"
+      ],
+      "@hft-forge/types/ku": [
+        "libs/types/src/ku/index.ts"
       ],
       "@hft-forge/types/forge-store": [
         "libs/types/src/forge-store/index.ts"
