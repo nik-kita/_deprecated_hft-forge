@@ -1,11 +1,13 @@
 import { HttpService } from '@hft-forge/http';
 import { HttpMethod } from '@hft-forge/types/common';
 import { KuEnv, KuSignOptions, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import { KuSignGeneratorService } from './ku-http-api.sign-generator.service';
 
 @Injectable()
+@BindThis()
 export class KuReq {
     private keys: KuEnv;
 
@@ -31,7 +33,7 @@ export class KuReq {
 
         return {
             order_book: {
-                full: this.getFullOrderBook.bind(this) as typeof this.getFullOrderBook,
+                full: this.getFullOrderBook,
             },
         };
     }

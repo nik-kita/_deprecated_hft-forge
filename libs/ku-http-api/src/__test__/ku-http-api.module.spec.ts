@@ -21,5 +21,4 @@ describe(KuHttpApiModule.name, () => {
       expect(kuSignGeneratorService).toBeInstanceOf(KuSignGeneratorService);
       expect(kuReq).toBeDefined();
   });
-
 });
