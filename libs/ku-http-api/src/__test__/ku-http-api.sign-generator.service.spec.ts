@@ -9,7 +9,7 @@ describe(KuSignGeneratorService.name, () => {
         API_KEY: 'alahamora',
     };
 
-    it.skip.each([
+    it.each([
         {
             expectedStr: JSON.stringify({
                 'KC-API-SIGN': 'Ms20xHvWR51XwBNNqnB40JAmUO3RbqRVHYYncfumD6A=',

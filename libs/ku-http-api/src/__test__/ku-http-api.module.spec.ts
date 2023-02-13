@@ -9,7 +9,7 @@ describe(KuHttpApiModule.name, () => {
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
-        imports: [KuHttpApiModule, ConfigModule.forRoot({ isGlobal: true })],
+        imports: [KuHttpApiModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.test.env'] })],
     }).compile();
   });
 

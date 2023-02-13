@@ -14,19 +14,13 @@ export class KuReq {
     constructor(
         private httpService: HttpService,
         private signGeneratorService: KuSignGeneratorService,
-        private configService: ConfigService<KuEnv>,
+        private configService: ConfigService<KuEnv, true>,
     ) {
-        const keys = {
+        this.keys = {
             API_KEY: this.configService.get('API_KEY'),
             API_SECRET: this.configService.get('API_SECRET'),
             API_PASSPHRASE: this.configService.get('API_PASSPHRASE'),
         };
-
-        if (Object.values(keys).some((v) => !v)) {
-            throw new Error(`Provide ${KU_ENV_KEYS} to for sign request!`);
-        }
-
-        this.keys = keys;
     }
 
     public get() {
@@ -56,5 +50,11 @@ export class KuReq {
             method,
             query,
         });
+    }
+
+    private checkEnv() {
+        if (Object.values(this.keys).some((v) => !v)) {
+            throw new Error(`Provide ${KU_ENV_KEYS} to for sign request!`);
+        }
     }
 }

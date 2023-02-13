@@ -16,7 +16,7 @@ describe(`${KuReq.name} (if it possible - test real http execution)`, () => {
         const app = await Test.createTestingModule({
             imports: [KuHttpApiModule, ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: [join(process.cwd(), '.env')],
+                envFilePath: [join(process.cwd(), '.test.env')],
             })],
         }).compile();
 
