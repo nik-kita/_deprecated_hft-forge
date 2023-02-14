@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { WebSocketGateway } from '@nestjs/websockets';
 import { KuWsClient } from '../..';
-import { Describe_Check_$connect$_method_of_$KuWsClient$ } from './ku-ws-client.connect.describe';
+import describe_KuWsClient_connect from './ku-ws-client.connect.describe';
 
 
 @WebSocketGateway()
@@ -30,7 +30,7 @@ describe(KuWsClient.name, () => {
         expect(url).toMatch(/http.+:/);
     });
     
-    Describe_Check_$connect$_method_of_$KuWsClient$(() => ({ mockApp }));
+    describe_KuWsClient_connect(() => ({ mockApp }));
 
     afterEach(async () => {
         await mockApp?.close();

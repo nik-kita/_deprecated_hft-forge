@@ -1,15 +1,11 @@
 import { describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
+import { KuWsClient } from '../..';
 
-
-export function Describe_Check_$connect$_method_of_$KuWsClient$(getMocks: () => {
+export default function (getMocks: () => {
     mockApp: INestApplication,
 }) {
-    return describe(Describe_Check_$connect$_method_of_$KuWsClient$
-        .name
-        .replaceAll('_', ' ')
-        .replace('Describe', '')
-        .replaceAll('$', '/'), () => {
+    return describe('Check /.connect()/ method of /KuWsClient/', () => {
 
             it('MockApp should be defined', () => {
                 expect(getMocks().mockApp).toBeDefined();
