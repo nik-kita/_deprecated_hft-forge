@@ -2,7 +2,7 @@ import { INestApplication, Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { WebSocketGateway } from '@nestjs/websockets';
-import { KuWsClient } from '..';
+import { KuWsClient } from '../..';
 
 @WebSocketGateway()
 class MockGate { }
