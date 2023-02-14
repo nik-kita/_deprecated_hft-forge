@@ -19,9 +19,9 @@ describe(KuWsClient.name, () => {
     beforeEach(async () => {
         mockApp = await NestFactory.create(MockApp, { logger: false });
         mockApp.useWebSocketAdapter(new WsAdapter(mockApp));
-
+        
         await mockApp.listen(0);
-
+        
         url = await mockApp.getUrl();
     });
 
@@ -29,8 +29,8 @@ describe(KuWsClient.name, () => {
         expect(mockApp).toBeDefined();
         expect(url).toMatch(/http.+:/);
     });
-
-    Describe_Check_$connect$_method_of_$KuWsClient$();
+    
+    Describe_Check_$connect$_method_of_$KuWsClient$(() => ({ mockApp }));
 
     afterEach(async () => {
         await mockApp?.close();
