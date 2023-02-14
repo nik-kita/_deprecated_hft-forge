@@ -1,2 +1,4 @@
 export { GateMessage } from './gate-message.type';
-export { GET, POST, DELETE, HttpMethod } from './http-method.const';
+export { DELETE, GET, HttpMethod, POST } from './http-method.const';
+export { WsReadyState, WsReadyStateKV, WsReadyStateVK, WS_READY_STATE_K_V, WS_READY_STATE_V_K } from './ws.ready-state.type';
+
