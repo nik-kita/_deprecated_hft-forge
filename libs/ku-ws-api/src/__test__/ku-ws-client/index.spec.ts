@@ -1,16 +1,9 @@
-import { INestApplication, Module } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
-import { WebSocketGateway } from '@nestjs/websockets';
 import { KuWsClient } from '../..';
 import describe_KuWsClient_connect from './ku-ws-client.connect.describe';
-
-
-@WebSocketGateway()
-class MockGate { }
-
-@Module({ providers: [MockGate] })
-class MockApp { }
+import { MockApp } from './mocks';
 
 describe(KuWsClient.name, () => {
     let mockApp: INestApplication;
