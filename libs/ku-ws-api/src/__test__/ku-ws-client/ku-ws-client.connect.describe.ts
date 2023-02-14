@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
 import { KuWsClient } from '../../lib/ku-ws-api.ku-ws.client';
 import { MockGate } from './mocks';
@@ -9,40 +9,66 @@ export default function (getMocks: () => {
     mockAppUrl: string,
 }) {
     return describe('Check /.connect()/ method of /KuWsClient/', () => {
+        let mockApp: INestApplication;
+        let wsUrl: string;
+        let client: KuWsClient;
+        let mockGate: MockGate;
+
+        beforeEach(() => {
+            const mocks = getMocks();
+
+            mockApp = mocks.mockApp;
+            wsUrl = mocks.mockAppUrl.replace('http', 'ws');
+            client = new KuWsClient();
+            mockGate = mockApp.get(MockGate);
+        });
 
         it('MockApp should be defined', () => {
-            const {
-                mockApp,
-                mockAppUrl,
-            } = getMocks();
             expect(mockApp).toBeDefined();
-            expect(mockAppUrl.replace('http', 'ws')).toMatch(/^ws/);
-            console.log(mockAppUrl);
+            expect(wsUrl).toMatch(/^ws/);
+            console.log(wsUrl);
         });
 
         it('Should connect to mockApp', async () => {
-            const {
-                mockApp,
-                mockAppUrl,
-            } = getMocks();
-            const client = new KuWsClient();
-            const mockGate = mockApp.get(MockGate);
-
             expect(mockGate.connectionCounts).toBe(0);
-            
-            await client.connect(mockAppUrl.replace('http', 'ws'));
-            
+
+            await client.connect(wsUrl);
+
             expect(mockGate.connectionCounts).toBe(1);
-            
+
             const originWs = client.__getOriginWs();
-            
+
             await new Promise((resolve) => {
                 originWs.on('close', resolve);
                 originWs.close();
             });
-            
+
             expect(mockGate.connectionCounts).toBe(0);
             expect('errors').not.toBe('throwed');
+        });
+
+        it('Should connect only once even if call /.connect()/ many times', async () => {
+            const CONNECTIONS_COUNT_ON_TEST_START = mockGate.connectionCounts;
+            let expectedConnCount = CONNECTIONS_COUNT_ON_TEST_START;
+
+            await client.connect(wsUrl);
+
+            expect(mockGate.connectionCounts).toBe(++expectedConnCount);
+
+            await client.connect(wsUrl);
+            await client.connect(wsUrl);
+            await client.connect(wsUrl);
+            await client.connect(wsUrl);
+
+            expect(mockGate.connectionCounts).toBe(expectedConnCount);
+
+            await new Promise((resolve) => {
+                const origin = client.__getOriginWs();
+
+                origin.on('close', resolve);
+
+                origin.close();
+            });
         });
     });
 }
