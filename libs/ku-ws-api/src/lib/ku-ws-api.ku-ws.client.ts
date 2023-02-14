@@ -24,7 +24,7 @@ export class KuWsClient {
         }
     }
 
-    private get closePromise() {
+    private getClosePromise() {
         if (!this.wsState || ['CLOSED', 'CLOSING'].includes(this.wsState)) return Promise.resolve();
 
         return new Promise<void>((resolve) => {
@@ -32,7 +32,7 @@ export class KuWsClient {
         });
     }
 
-    private get openPromise() {
+    private getOpenPromise() {
         if (!this.wsState) {
             throw new HftForgeError(`Impossible to wait on open ${KuWsClient.name} because it is null.`);
         }
@@ -47,6 +47,6 @@ export class KuWsClient {
     private async close() {
         this.ws.close();
 
-        await this.closePromise;
+        await this.getClosePromise();
     }
 }
