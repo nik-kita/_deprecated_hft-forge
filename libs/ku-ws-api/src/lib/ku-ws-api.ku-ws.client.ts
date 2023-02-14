@@ -14,9 +14,11 @@ export class KuWsClient {
         return WS_READY_STATE_V_K[this.ws.readyState];
     }
 
-    connect(url: `ws${string}`) {
+    __getOriginWs() { return this.ws; }
+
+    connect(url: `ws${string}` | string) {
         return new Promise<void>((resolve, reject) => {
-            const wsState = this.getWsState() || 'OPEN';
+            const wsState = this.getWsState() || 'CLOSED';
             const open = () => {
                 this.ws = new WebSocket(url);
                 this.ws.once('open', resolve);
