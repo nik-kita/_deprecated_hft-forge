@@ -1,20 +1,37 @@
+import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { WebSocket } from 'ws';
-import { KU_BASE_URL } from '@hft-forge/types/ku';
-
 
 
 @Injectable()
+@BindThis()
 export class KuWsClient {
-    private ws = new WebSocket(KU_BASE_URL);
+    private ws: WebSocket;
 
-    private closePromise = new Promise<void>((resolve) => {
-        this.ws.on('close', resolve);
-    });
+    private get wsState() {
+        if (!this.ws) return null;
 
-    private promises = [this.closePromise];
+        switch (this.ws.readyState) {
+            case WebSocket.CLOSED:
+                return 'CLOSED' as const;
+            case WebSocket.CLOSING:
+                return 'CLOSING' as const;
+            case WebSocket.CONNECTING:
+                return 'CONNECTING' as const;
+            case WebSocket.OPEN:
+                return 'OPEN' as const;
+        }
+    }
 
-    public async close() {
+    private get closePromise() {
+        if (!this.wsState || ['CLOSED', 'CLOSING'].includes(this.wsState)) return Promise.resolve();
+
+        return new Promise<void>((resolve) => {
+            this.ws.on('close', resolve);
+        });
+    }
+
+    private async close() {
         this.ws.close();
 
         await this.closePromise;
