@@ -1,6 +1,7 @@
 import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { WebSocket } from 'ws';
+import { HftForgeError } from '@hft-forge/utils';
 
 
 @Injectable()
@@ -28,6 +29,18 @@ export class KuWsClient {
 
         return new Promise<void>((resolve) => {
             this.ws.on('close', resolve);
+        });
+    }
+
+    private get openPromise() {
+        if (!this.wsState) {
+            throw new HftForgeError(`Impossible to wait on open ${KuWsClient.name} because it is null.`);
+        }
+
+        if (['CONNECTING', 'OPEN'].includes(this.wsState)) return Promise.resolve();
+
+        return new Promise<void>((resolve) => {
+            this.ws.on('open', resolve);
         });
     }
 
