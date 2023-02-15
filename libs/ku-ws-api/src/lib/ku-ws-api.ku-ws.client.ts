@@ -16,6 +16,7 @@ export class KuWsClient {
 
     __getOriginWs() { return this.ws; }
 
+    // TODO rewrite like /.disconnect()/ (without inner promises)
     connect(url: `ws${string}` | string) {
         return new Promise<void>((resolve, reject) => {
             const wsState = this.getWsState() || 'CLOSED';
@@ -37,10 +38,36 @@ export class KuWsClient {
                 },
                 CLOSED: open,
                 CLOSING: () => onClose().then(open),
-                CONNECTING: () => this.ws.on('open', resolve),
+                CONNECTING: () => this.ws.once('open', resolve),
             };
 
             resolver[wsState]();
+        });
+    }
+
+    disconnect() {
+        return new Promise<void>((resolve, reject) => {
+            const onCloseCb = () => {
+                resolve();
+            };
+
+            this.ws?.on('close', onCloseCb);
+
+            if (!this.ws) {
+                resolve();
+            } else if (this.getWsState() === 'CLOSED') {
+                this.ws.removeEventListener('close', onCloseCb);
+
+                resolve();
+            } else if (this.getWsState() === 'CLOSING') {
+                // wait for 'close' event
+            } else if (this.getWsState() === 'OPEN') {
+                this.ws.close();
+            } else if (this.getWsState() === 'CONNECTING') {
+                this.ws.once('open', () => {
+                    this.ws.close();
+                });
+            }
         });
     }
 }

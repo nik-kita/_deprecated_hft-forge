@@ -4,7 +4,9 @@ import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { KuWsClient } from '../..';
 import { connectDescribe } from './connect.describe';
+import { disconnectDescribe } from './disconnect.describe';
 import { MockApp } from './mocks';
+
 
 describe(KuWsClient.name, () => {
     let mockApp: INestApplication;
@@ -13,9 +15,9 @@ describe(KuWsClient.name, () => {
     beforeEach(async () => {
         mockApp = await NestFactory.create(MockApp, { logger: false });
         mockApp.useWebSocketAdapter(new WsAdapter(mockApp));
-        
+
         await mockApp.listen(0, 'localhost');
-        
+
         mockAppUrl = await mockApp.getUrl();
     });
 
@@ -23,10 +25,16 @@ describe(KuWsClient.name, () => {
         expect(mockApp).toBeDefined();
         expect(mockAppUrl).toMatch(/http.+:/);
     });
-    
+
     describePortal(
         connectDescribe,
         'Check /KuWsClient.connection/',
+        () => ({ mockApp, mockAppUrl }),
+    );
+
+    describePortal(
+        disconnectDescribe,
+        'Check /.disconnect/ method of /KuWsClient/',
         () => ({ mockApp, mockAppUrl }),
     );
 

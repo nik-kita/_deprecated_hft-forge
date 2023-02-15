@@ -12,7 +12,7 @@ export function connectDescribe(
         mockAppUrl: string,
     },
 ) {
-    return describe('Check /.connect()/ method of /KuWsClient/', () => {
+    return describe(name, () => {
         let mockApp: INestApplication;
         let wsUrl: string;
         let client: KuWsClient;
