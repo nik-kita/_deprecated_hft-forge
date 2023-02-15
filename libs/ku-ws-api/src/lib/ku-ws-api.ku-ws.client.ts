@@ -8,7 +8,7 @@ import { WebSocket } from 'ws';
 export class KuWsClient {
     private ws: WebSocket;
 
-    private getWsState(): WsReadyState | null {
+    getWsState(): WsReadyState | null {
         if (!this.ws) return null;
 
         return WS_READY_STATE_V_K[this.ws.readyState];

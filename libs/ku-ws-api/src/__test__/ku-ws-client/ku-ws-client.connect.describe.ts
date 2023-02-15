@@ -1,7 +1,9 @@
+import { WsReadyState } from '@hft-forge/types/common';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
 import { KuWsClient } from '../../lib/ku-ws-api.ku-ws.client';
 import { MockGate } from './mocks';
+import exp = require('constants');
 
 
 export default function (getMocks: () => {
@@ -69,6 +71,14 @@ export default function (getMocks: () => {
 
                 origin.close();
             });
+        });
+
+        it('Should connect (ws = null), disconnect (ws = ws(closed)), connect again', async () => {
+            expect(client.getWsState()).toBe(null);
+
+            await client.connect(wsUrl);
+
+            expect(client.getWsState()).toBe('OPEN' satisfies WsReadyState);
         });
     });
 }
