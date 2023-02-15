@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { KuWsClient } from '../..';
-import { connectDescribe } from './ku-ws-client.connect.describe';
+import { connectDescribe } from './connect.describe';
 import { MockApp } from './mocks';
 
 describe(KuWsClient.name, () => {
