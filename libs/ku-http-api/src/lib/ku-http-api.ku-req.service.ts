@@ -1,5 +1,5 @@
 import { HttpService } from '@hft-forge/http';
-import { KuEnv, KuReq, KuReq_order_book_level_2, KU_BASE_URL, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { KuEnv, KuReq, KuReq_apply_ws_public_connect_token, KuReq_order_book_level_2, KU_BASE_URL, KU_GET_ENDPOINT, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
 import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
@@ -31,17 +31,42 @@ export class KuReqService {
         };
     }
 
+    public post() {
+
+        return {
+            apply_ws_connect_token: {
+                public: this.postApplyWsConnectToken,
+            },
+        };
+    }
+
+    private postApplyWsConnectToken() {
+        const payload: KuReq_apply_ws_public_connect_token = {
+            endpoint: KU_POST_ENDPOINT.apply_ws_connect_token.public,
+            method: 'POST'
+        };
+
+        return this.sendPublicRequest(payload);
+    }
+
     private async getFullOrderBook(symbol: string) {
         const payload: KuReq_order_book_level_2 = {
             endpoint: KU_GET_ENDPOINT.order_book.full,
             method: 'GET',
             query: { symbol },
         };
-        
-        return this.sendRequest(payload);
+
+        return this.sendPrivateRequest(payload);
     }
 
-    private sendRequest(payload: KuReq<any, any, any, any>) {
+    private sendPublicRequest(payload: KuReq<any, any, any>) {
+        const { endpoint, ...options } = payload;
+        const url = `${KU_BASE_URL}${endpoint}`;
+
+        return this.httpService.req(url, options);
+    }
+
+    private sendPrivateRequest(payload: KuReq<any, any, any, any>) {
         const headers = this.signGeneratorService.generateHeaders(payload, this.keys);
         const url = `${KU_BASE_URL}${payload.endpoint}`;
         const { endpoint, ...options } = { ...payload, headers };
