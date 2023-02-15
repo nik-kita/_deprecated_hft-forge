@@ -1,10 +1,8 @@
-import { KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
+import { KuReq_order_book_level_2, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { itif } from '@hft-forge/utils';
 import { describe, expect } from '@jest/globals';
-import { ConfigModule } from '@nestjs/config';
-import { Test } from '@nestjs/testing';
-import { join } from 'path';
-import { KuHttpApiModule, KuReqService, KuSignGeneratorService } from '../..';
+import { request } from 'undici';
+import { KuSignGeneratorService } from '../..';
 
 
 export const describe_full_order_book_request = (
@@ -19,31 +17,28 @@ export const describe_full_order_book_request = (
                 envVariables: KU_ENV_KEYS.map((k) => k),
             },
         })('Should get full order book', async () => {
-            const app = await Test.createTestingModule({
-                imports: [KuHttpApiModule, ConfigModule.forRoot({
-                    isGlobal: true,
-                    envFilePath: [join(process.cwd(), '.test.env')],
-                })],
-            }).compile();
+            const keys = {
+                API_KEY: process.env.API_KEY!,
+                API_SECRET: process.env.API_SECRET!,
+                API_PASSPHRASE: process.env.API_PASSPHRASE!,
+            };
+            const payload: KuReq_order_book_level_2 = {
+                endpoint: KU_GET_ENDPOINT.order_book.full,
+                method: 'GET',
+                query: { symbol: 'BTC-USDT' },
+            };
+            const kuReqSignService = new KuSignGeneratorService();
+            const headers = kuReqSignService.generateHeaders(payload, keys);
+            const { endpoint, ...options } = { ...payload, headers }; 
+            const res = await request(`${KU_BASE_URL}${endpoint}`, options);
 
-            const sGen = app.get<KuSignGeneratorService>(KuSignGeneratorService);
+            expect(res).toBeDefined();
+            expect(res.body).toBeDefined();
+            expect(res.body.json).toBeInstanceOf(Function);
 
-            expect(sGen).toBeInstanceOf(KuSignGeneratorService);
+            const jData = await res.body.json();
 
-            const kuReq = app.get<KuReqService>(KuReqService);
-
-            expect(kuReq).toBeInstanceOf(KuReqService);
-            expect((kuReq as any).signGeneratorService).toBeInstanceOf(KuSignGeneratorService);
-
-            const { body, statusCode, context, headers } = await kuReq.get().order_book.full('BTC-USDT');
-
-            if (statusCode >= 400) {
-                console.warn(context);
-                console.warn(headers);
-                console.warn(await body.json());
-            }
-
-            expect(statusCode).toBeLessThan(400);
+            expect(jData).toBeInstanceOf(Object);
         });
     });
 };

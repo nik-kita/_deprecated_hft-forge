@@ -11,7 +11,6 @@ const separateDescribe = (name: 'Check mounting "describe" from another file', g
 
     it('Should return "hello world"', () => {
         expect(hello).toBe('world');
-        console.log(hello);
     });
 });
 
