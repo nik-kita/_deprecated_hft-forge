@@ -2,6 +2,12 @@ import { itif } from '..';
 
 
 describe(itif.name, () => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {
+        /**
+         * Comment this /.spyOn/ if you want to enable console.warn it these tests
+         */
+    });
+
     let shouldBeExecuted = 0;
     let shouldBeSkipped = 0;
     

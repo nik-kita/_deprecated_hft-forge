@@ -1,15 +1,19 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2021",
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": ["jest", "node"]
+    "declaration": true,
+    "types": [
+      "node"
+    ],
+    "target": "es6"
   },
   "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
     "jest.config.ts",
-    "src/**/*.test.ts",
     "src/**/*.spec.ts",
-    "src/**/*.d.ts"
+    "src/**/*.test.ts"
   ]
 }
