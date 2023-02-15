@@ -3,13 +3,15 @@ import { beforeEach, describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
 import { KuWsClient } from '../../lib/ku-ws-api.ku-ws.client';
 import { MockGate } from './mocks';
-import exp = require('constants');
 
 
-export default function (getMocks: () => {
-    mockApp: INestApplication,
-    mockAppUrl: string,
-}) {
+export function connectDescribe(
+    name: 'Check /KuWsClient.connection/',
+    getMocks: () => {
+        mockApp: INestApplication,
+        mockAppUrl: string,
+    },
+) {
     return describe('Check /.connect()/ method of /KuWsClient/', () => {
         let mockApp: INestApplication;
         let wsUrl: string;
@@ -28,7 +30,6 @@ export default function (getMocks: () => {
         it('MockApp should be defined', () => {
             expect(mockApp).toBeDefined();
             expect(wsUrl).toMatch(/^ws/);
-            console.log(wsUrl);
         });
 
         it('Should connect to mockApp', async () => {
@@ -74,11 +75,45 @@ export default function (getMocks: () => {
         });
 
         it('Should connect (ws = null), disconnect (ws = ws(closed)), connect again', async () => {
+            const CONNECTIONS_COUNT_ON_TEST_START = mockGate.connectionCounts;
+            let expectedConnCount = CONNECTIONS_COUNT_ON_TEST_START;
+
             expect(client.getWsState()).toBe(null);
+            expect(expectedConnCount).toBe(0);
 
             await client.connect(wsUrl);
 
+            ++expectedConnCount;
+
             expect(client.getWsState()).toBe('OPEN' satisfies WsReadyState);
+            expect(mockGate.connectionCounts).toBe(expectedConnCount);
+
+            await new Promise((resolve) => {
+                const origin = client.__getOriginWs();
+
+                origin.on('close', resolve);
+
+                origin.close();
+            });
+
+            --expectedConnCount;
+
+            expect(mockGate.connectionCounts).toBe(expectedConnCount);
+
+            await client.connect(wsUrl);
+
+            ++expectedConnCount;
+
+            expect(mockGate.connectionCounts).toBe(expectedConnCount);
+            expect(client.getWsState()).toBe('OPEN' satisfies WsReadyState);
+
+            await new Promise((resolve) => {
+                const origin = client.__getOriginWs();
+
+                origin.on('close', resolve);
+
+                origin.close();
+            });
         });
     });
 }

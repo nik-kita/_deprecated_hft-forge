@@ -1,6 +1,6 @@
 import { describePortal } from '..';
 
-const separateDescribe = (name: string, getContext: () => {
+const separateDescribe = (name: 'Check mounting "describe" from another file', getContext: () => {
     hello: string,
 }) => describe(name, () => {
     let hello: string;
@@ -16,5 +16,9 @@ const separateDescribe = (name: string, getContext: () => {
 });
 
 describe(describePortal.name, () => {
-    separateDescribe('Check mounting "describe" from another file', () => ({ hello: 'world' }));
+    describePortal(
+        separateDescribe,
+        'Check mounting "describe" from another file',
+        () => ({ hello: 'world' }),
+    );
 });
