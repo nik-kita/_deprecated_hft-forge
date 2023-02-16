@@ -1,3 +1,4 @@
+import { WsClientService } from '@hft-forge/ws';
 import { describe, expect, it } from '@jest/globals';
 import { Module } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
@@ -24,6 +25,21 @@ export const describe_ku_ws_module_exported_providers_check = (
             const kuWsApiService = clientApp.get(KuWsApiService);
 
             expect(kuWsApiService).toBeInstanceOf(KuWsApiService);
+
+            await clientApp?.close();
+        });
+
+        it(`${KuWsApiService.name} should contain /wsClient/ property ${WsClientService.name}`, async () => {
+            const clientApp = await Test.createTestingModule({
+                imports: [ClientModule],
+            }).compile();
+
+            const kuWsApiService = clientApp.get(KuWsApiService);
+
+            expect(kuWsApiService).toBeInstanceOf(KuWsApiService);
+            expect((kuWsApiService as any)['wsClient']).toBeInstanceOf(WsClientService);
+
+            await clientApp?.close();
         });
     });
 };

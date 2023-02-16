@@ -22,7 +22,7 @@ export const describe_ku_ws_module_providers_check = (
             testingModule = data.testApp;
         });
 
-        it(`/${HttpService.name}/ and /${WsClientService.name} should be mounted`, () => {
+        it(`${HttpService.name} and ${WsClientService.name || 'WsClientService'} should be mounted`, () => {
             const kuWsApiModule = testingModule.get(KuWsApiModule);
 
             expect(kuWsApiModule).toBeInstanceOf(KuWsApiModule);
