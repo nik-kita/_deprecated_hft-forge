@@ -1,12 +1,12 @@
 import { WsReadyState } from '@hft-forge/types/common';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
-import { KuWsClient } from '../..';
+import { WsClientService } from '../..';
 import { MockGate } from './mocks';
 
 
 export function disconnectDescribe(
-    name: `Check /.disconnect/ method of /KuWsClient/`,
+    name: `Check /WsClientService.disconnect()/`,
     getMocks: () => {
         mockApp: INestApplication,
         mockAppUrl: string,
@@ -16,7 +16,7 @@ export function disconnectDescribe(
         let mockApp: INestApplication;
         let wsUrl: string;
         let mockGate: MockGate;
-        let kuWsClient: KuWsClient;
+        let wsClientService: WsClientService;
 
         beforeEach(() => {
             const mocks = getMocks();
@@ -24,25 +24,25 @@ export function disconnectDescribe(
             mockApp = mocks.mockApp;
             wsUrl = mocks.mockAppUrl.replace('http', 'ws');
             mockGate = mockApp.get(MockGate);
-            kuWsClient = new KuWsClient();
+            wsClientService = new WsClientService();
         });
 
         it('Should disconnect', async () => {
-            await kuWsClient.connect(wsUrl);
+            await wsClientService.connect(wsUrl);
 
-            expect(kuWsClient.getWsState()).toBe('OPEN' satisfies WsReadyState);
+            expect(wsClientService.getWsState()).toBe('OPEN' satisfies WsReadyState);
 
             
             const offTimeout = setTimeout(async () => {
-                await kuWsClient.__getOriginWs().close();
+                await wsClientService.__getOriginWs().close();
                 expect('not').toBe('here');
             }, 3000);
             
-            await kuWsClient.disconnect();
+            await wsClientService.disconnect();
 
             clearTimeout(offTimeout);
 
-            expect(kuWsClient.getWsState()).toBe('CLOSED' satisfies WsReadyState);
+            expect(wsClientService.getWsState()).toBe('CLOSED' satisfies WsReadyState);
             expect('any errors').not.toBe('happen');
         });
     });

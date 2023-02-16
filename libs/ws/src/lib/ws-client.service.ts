@@ -5,7 +5,7 @@ import { WebSocket } from 'ws';
 
 @Injectable()
 @BindThis()
-export class KuWsClient {
+export class WsClientService {
     private ws: WebSocket;
 
     getWsState(): WsReadyState | null {

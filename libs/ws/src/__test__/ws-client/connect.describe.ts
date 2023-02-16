@@ -1,12 +1,12 @@
 import { WsReadyState } from '@hft-forge/types/common';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
-import { KuWsClient } from '../../lib/ku-ws-api.ku-ws.client';
+import { WsClientService } from '../../lib/ws-client.service';
 import { MockGate } from './mocks';
 
 
 export function connectDescribe(
-    name: 'Check /KuWsClient.connection/',
+    name: 'Check /WsClientService.connect()/',
     getMocks: () => {
         mockApp: INestApplication,
         mockAppUrl: string,
@@ -15,7 +15,7 @@ export function connectDescribe(
     return describe(name, () => {
         let mockApp: INestApplication;
         let wsUrl: string;
-        let client: KuWsClient;
+        let client: WsClientService;
         let mockGate: MockGate;
 
         beforeEach(() => {
@@ -23,7 +23,7 @@ export function connectDescribe(
 
             mockApp = mocks.mockApp;
             wsUrl = mocks.mockAppUrl.replace('http', 'ws');
-            client = new KuWsClient();
+            client = new WsClientService();
             mockGate = mockApp.get(MockGate);
         });
 

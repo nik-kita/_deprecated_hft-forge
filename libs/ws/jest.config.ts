@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'ku-ws-api',
+  displayName: 'ws',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -12,5 +12,5 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/libs/ku-ws-api'
+  coverageDirectory: '../../coverage/libs/ws'
 };

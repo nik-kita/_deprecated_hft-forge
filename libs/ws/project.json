@@ -1,7 +1,7 @@
 {
-  "name": "ku-ws-api",
+  "name": "ws",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/ku-ws-api/src",
+  "sourceRoot": "libs/ws/src",
   "projectType": "library",
   "targets": {
     "lint": {
@@ -11,7 +11,7 @@
       ],
       "options": {
         "lintFilePatterns": [
-          "libs/ku-ws-api/**/*.ts"
+          "libs/ws/**/*.ts"
         ]
       }
     },
@@ -21,7 +21,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "libs/ku-ws-api/jest.config.ts",
+        "jestConfig": "libs/ws/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
