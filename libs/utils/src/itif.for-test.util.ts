@@ -11,7 +11,7 @@ type CustomConditionType = {
 
 function isRequiredEnvVariablesProvided(options: NeedEnvType['needEnv']) {
     const { envFilePath, envVariables } = options;
-    
+
     config({ path: envFilePath });
     
     const currEnvVariables = Object.getOwnPropertyNames(process.env);

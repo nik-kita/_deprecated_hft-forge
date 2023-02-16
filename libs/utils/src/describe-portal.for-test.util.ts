@@ -1,7 +1,7 @@
-export function describePortal<D, T extends (
-    name: string,
-    getContext?: () => object,
-) => D>(
+import { DescribeInPortal } from '@hft-forge/types/common';
+
+
+export function describePortal<D, T extends DescribeInPortal<D>>(
     portal: T,
     name: Parameters<T>[0],
     liftContext: Parameters<T>[1],

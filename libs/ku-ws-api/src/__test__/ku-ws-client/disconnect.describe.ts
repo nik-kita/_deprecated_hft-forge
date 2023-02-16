@@ -27,7 +27,7 @@ export function disconnectDescribe(
             kuWsClient = new KuWsClient();
         });
 
-        it.only('Should disconnect', async () => {
+        it('Should disconnect', async () => {
             await kuWsClient.connect(wsUrl);
 
             expect(kuWsClient.getWsState()).toBe('OPEN' satisfies WsReadyState);

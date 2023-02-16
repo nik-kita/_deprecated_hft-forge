@@ -6,7 +6,12 @@ import * as forge from 'node-forge';
 
 @Injectable()
 export class KuSignGeneratorService {
-    public generateHeaders(options: KuReq<HttpMethod, string, object>, credentials: KuEnv) {
+    public generateHeaders<
+    M extends HttpMethod,
+    E extends string,
+    Q extends object | undefined = undefined,
+    B extends object | undefined = undefined,
+    >(options: KuReq<M, E, Q, B>, credentials: KuEnv) {
         const {
             API_KEY,
             API_PASSPHRASE,
@@ -14,7 +19,7 @@ export class KuSignGeneratorService {
         } = credentials;
         const {
             method, endpoint, query, body,
-        } = options;
+        } = options as KuReq<M, E, object, object>;
         const _endpoint = query && Object.keys(query).length
             ? `${endpoint}?${qsFromObj(query)}`
             : endpoint;
