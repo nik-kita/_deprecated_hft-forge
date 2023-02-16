@@ -16,32 +16,37 @@ export class KuWsClient {
 
     __getOriginWs() { return this.ws; }
 
-    // TODO rewrite like /.disconnect()/ (without inner promises)
     connect(url: `ws${string}` | string) {
         return new Promise<void>((resolve, reject) => {
-            const wsState = this.getWsState() || 'CLOSED';
+            const onOpenCb = () => {
+                resolve();
+            };
             const open = () => {
                 this.ws = new WebSocket(url);
-                this.ws.once('open', resolve);
-            };
-            const onClose = () => new Promise((rs, rj) => {
-                this.ws.once('close', rs);
-                this.ws.close();
-            });
-            const resolver: Record<WsReadyState, () => void> = {
-                OPEN: () => {
-                    if (this.ws.url === url) {
-                        resolve();
-                    } else {
-                        onClose().then(open);
-                    }
-                },
-                CLOSED: open,
-                CLOSING: () => onClose().then(open),
-                CONNECTING: () => this.ws.once('open', resolve),
+                this.ws.once('open', onOpenCb);
             };
 
-            resolver[wsState]();
+            if (!this.ws) {
+                open();
+            } else if (this.getWsState() === 'OPEN') {
+                if (this.ws.url === url) resolve();
+                else {
+                    this.ws.once('close', open);
+                    this.ws.close();
+                }
+            } else if (this.getWsState() === 'CONNECTING') {
+                if (this.ws.url === url) this.ws.once('open', resolve);
+                else {
+                    this.ws.once('open', () => {
+                        this.ws.once('close', open);
+                        this.ws.close();
+                    });
+                }
+            } else if (this.getWsState() === 'CLOSING') {
+                this.ws.once('close', open);
+            } else if (this.getWsState() === 'CLOSED') {
+                open();
+            }
         });
     }
 
@@ -51,7 +56,7 @@ export class KuWsClient {
                 resolve();
             };
 
-            this.ws?.on('close', onCloseCb);
+            this.ws?.once('close', onCloseCb);
 
             if (!this.ws) {
                 resolve();
