@@ -28,9 +28,6 @@
       "@hft-forge/ku-http-api": [
         "libs/ku-http-api/src/index.ts"
       ],
-      "@hft-forge/ku-ws-api": [
-        "libs/ku-ws-api/src/index.ts"
-      ],
       "@hft-forge/types/app": [
         "libs/types/src/app/index.ts"
       ],
@@ -45,6 +42,9 @@
       ],
       "@hft-forge/utils": [
         "libs/utils/src/index.ts"
+      ],
+      "@hft-forge/ws": [
+        "libs/ws/src/index.ts"
       ]
     }
   },

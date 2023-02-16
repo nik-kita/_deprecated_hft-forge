@@ -2,13 +2,13 @@ import { describePortal } from '@hft-forge/utils';
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
-import { KuWsClient } from '../..';
+import { WsClientService } from '../..';
 import { connectDescribe } from './connect.describe';
 import { disconnectDescribe } from './disconnect.describe';
 import { MockApp } from './mocks';
 
 
-describe(KuWsClient.name, () => {
+describe(WsClientService.name, () => {
     let mockApp: INestApplication;
     let mockAppUrl: string;
 
@@ -28,13 +28,13 @@ describe(KuWsClient.name, () => {
 
     describePortal(
         connectDescribe,
-        'Check /KuWsClient.connection/',
+        'Check /WsClientService.connect()/',
         () => ({ mockApp, mockAppUrl }),
     );
 
     describePortal(
         disconnectDescribe,
-        'Check /.disconnect/ method of /KuWsClient/',
+        'Check /WsClientService.disconnect()/',
         () => ({ mockApp, mockAppUrl }),
     );
 
