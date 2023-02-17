@@ -1,6 +1,6 @@
-import { CurrencyPair, KuWs, PriceSizeSeq, UsdtCurrency } from "../common";
+import { CurrencyPair, KuWs, PriceSizeSeq } from "../common";
 
-export type Level2_topic = `/market/level2:${UsdtCurrency}`;
+export type Level2_topic = `/market/level2:${CurrencyPair}`;
 
 export type KuWsReq_level2 = KuWs<
     'subscribe',

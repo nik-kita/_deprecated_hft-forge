@@ -12,9 +12,6 @@ import { afterEach, beforeEach, describe, expect } from '@jest/globals';
 
 export function describe_ku_ws_subscribe_welcome(
     name: 'Should subscribe and receive "welcome" in "type" property of response',
-    getData: () => ({
-        //
-    }),
 ) {
 
     return describe(name, () => {

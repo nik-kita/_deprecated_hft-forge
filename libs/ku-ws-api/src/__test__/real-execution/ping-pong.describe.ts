@@ -11,9 +11,6 @@ import { afterEach, beforeEach, describe, expect } from '@jest/globals';
 
 export function describe_ku_ws_subscribe_ping_pong(
     name: 'Should subscribe: ping <=> pong',
-    getData: () => ({
-        //
-    }),
 ) {
 
     return describe(name, () => {
