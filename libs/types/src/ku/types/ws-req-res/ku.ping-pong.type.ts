@@ -2,12 +2,12 @@ import { KuWs } from "../common/ku.ws.type";
 
 
 export type KuWsReq_ping = KuWs<
-    Record<string, never>,
+    Record<never, unknown>,
     'ping'
 >
 
 export type KuWsRes_pong = KuWs<
-    Record<string, never>,
+    Record<never, unknown>,
     'pong'
 >;
 
