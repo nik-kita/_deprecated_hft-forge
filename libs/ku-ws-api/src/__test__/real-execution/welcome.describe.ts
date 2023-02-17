@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
 import {
-    KuRes_apply_ws_public_connect_token,
+    KuRes_apply_connect_token,
     KuWsResType, KuWsRes_welcome, KU_BASE_URL,
     KU_ENV_KEYS,
     KU_POST_ENDPOINT
@@ -46,9 +46,9 @@ export function describe_ku_ws_subscribe_welcome(
 
             expect(body?.json).toBeInstanceOf(Function);
 
-            const jBody = await body.json() as KuRes_apply_ws_public_connect_token;
+            const jBody = await body.json() as KuRes_apply_connect_token;
 
-            expect(jBody.code).toBe('200000' satisfies KuRes_apply_ws_public_connect_token['code']);
+            expect(jBody.code).toBe('200000' satisfies KuRes_apply_connect_token['code']);
             expect(jBody.data.token).toMatch(/\S+/);
 
             const endpoint = jBody.data.instanceServers[0]?.endpoint;

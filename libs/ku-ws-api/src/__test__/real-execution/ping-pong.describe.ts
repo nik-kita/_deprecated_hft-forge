@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
 import {
-    KuRes_apply_ws_public_connect_token,
+    KuRes_apply_connect_token,
     KuWsConnectPayload, KuWsReq_ping, KuWsResType, KuWsRes_welcome, KU_BASE_URL, KU_ENV_KEYS,
     KU_POST_ENDPOINT
 } from '@hft-forge/types/ku';
@@ -37,7 +37,7 @@ export function describe_ku_ws_subscribe_ping_pong(
                     `${KU_BASE_URL}${KU_POST_ENDPOINT.apply_ws_connect_token.public}`,
                     { method: 'POST' },
                 );
-            const jBody = await body.json() as KuRes_apply_ws_public_connect_token;
+            const jBody = await body.json() as KuRes_apply_connect_token;
             const { token, instanceServers: [{ endpoint }] } = jBody.data;
             const connectPayload: KuWsConnectPayload = {
                 id: Date.now(),

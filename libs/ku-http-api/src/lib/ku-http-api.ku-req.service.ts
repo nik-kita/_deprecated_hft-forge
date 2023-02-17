@@ -1,5 +1,5 @@
 import { HttpService } from '@hft-forge/http';
-import { KuEnv, KuReq, KuReq_apply_ws_public_connect_token, KuReq_order_book_level_2_full, KU_BASE_URL, KU_GET_ENDPOINT, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
+import { KuEnv, KuReq, KuReq_apply_public_connect_token, KuReq_order_book_level_2_full, KU_BASE_URL, KU_GET_ENDPOINT, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
 import { BindThis } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
@@ -41,7 +41,7 @@ export class KuReqService {
     }
 
     private postApplyWsConnectToken() {
-        const payload: KuReq_apply_ws_public_connect_token = {
+        const payload: KuReq_apply_public_connect_token = {
             endpoint: KU_POST_ENDPOINT.apply_ws_connect_token.public,
             method: 'POST'
         };
