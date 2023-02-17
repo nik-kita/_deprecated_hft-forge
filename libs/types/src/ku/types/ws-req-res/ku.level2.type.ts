@@ -1,4 +1,4 @@
-import { CurrencyPair, KuWs, PriceSizeSeq } from "../common";
+import { CurrencyPair, KuUnsubscribe, KuWs, PriceSizeSeq } from "../common";
 
 export type Level2_topic = `/market/level2:${CurrencyPair}`;
 
@@ -9,6 +9,8 @@ export type KuWsReq_level2 = KuWs<
         response: boolean,
     }
 >;
+
+export type KuWsReq_level2_unsubscribe = KuUnsubscribe<KuWsReq_level2>;
 
 export type KuWsRes_level2 = KuWs<
     'message',
