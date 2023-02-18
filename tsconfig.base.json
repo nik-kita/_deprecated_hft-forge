@@ -31,6 +31,24 @@
       "@hft-forge/ku-ws-api": [
         "libs/ku-ws-api/src/index.ts"
       ],
+      "@hft-forge/test-pal/common": [
+        "libs/test-pal/src/common/index.ts"
+      ],
+      "@hft-forge/test-pal/core": [
+        "libs/test-pal/src/core/index.ts"
+      ],
+      "@hft-forge/test-pal/utils": [
+        "libs/test-pal/src/utils/index.ts"
+      ],
+      "@hft-forge/test-pal/fixtures": [
+        "libs/test-pal/src/fixtures/index.ts"
+      ],
+      "@hft-forge/test-pal/mocks": [
+        "libs/test-pal/src/mocks/index.ts"
+      ],
+      "@hft-forge/test-pal/preludes": [
+        "libs/test-pal/src/preludes/index.ts"
+      ],
       "@hft-forge/types/app": [
         "libs/types/src/app/index.ts"
       ],
