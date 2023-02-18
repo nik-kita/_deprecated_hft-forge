@@ -16,6 +16,6 @@ describe('Check Kucoin subscription channels', () => {
 
   describePortal(
     describe_subscribe_level2,
-    'Subscription to level2',
+    'Subscription compute messaging state by counting distinct received messages types',
   );
 });

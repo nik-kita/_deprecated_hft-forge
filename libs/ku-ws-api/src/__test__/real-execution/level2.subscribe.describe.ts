@@ -1,12 +1,12 @@
 import { HttpService } from '@hft-forge/http';
 import { KuSignGeneratorService } from '@hft-forge/ku-http-api';
-import { KuReq_apply_private_connect_token, KuRes_apply_connect_token, KuWsReq_level2, KuWsReq_level2_unsubscribe, KuWsResType, KU_BASE_URL, KU_ENV_KEYS } from '@hft-forge/types/ku';
+import { KuReq_apply_private_connect_token, KuRes_apply_connect_token, KuWs, KuWsReq_level2, KuWsReq_level2_unsubscribe, KuWsResType, KU_BASE_URL, KU_ENV_KEYS } from '@hft-forge/types/ku';
 import { itif, qsFromObj } from '@hft-forge/utils';
 import { beforeEach, describe, expect } from '@jest/globals';
 import { WebSocket } from 'ws';
 
 export function describe_subscribe_level2(
-    name: 'Subscription to level2',
+    name: 'Subscription compute messaging state by counting distinct received messages types',
 ) {
     return describe(name, () => {
         let http: HttpService;
@@ -17,6 +17,85 @@ export function describe_subscribe_level2(
             http = new HttpService();
             signGenerator = new KuSignGeneratorService();
         });
+
+        itif({
+            needEnv: {
+                envFilePath: '.test.env',
+                envVariables: KU_ENV_KEYS.map((k) => k),
+            },
+        })('Should unsubscribe with "private=true"', (done) => {
+            (async () => {
+                const applyConnect: KuReq_apply_private_connect_token = {
+                    endpoint: '/api/v1/bullet-private',
+                    method: 'POST',
+                };
+                const headers = signGenerator.generateHeaders(applyConnect, process.env as any);
+                const { body } = await http.req(`${KU_BASE_URL}${applyConnect.endpoint}`, {
+                    method: applyConnect.method,
+                    headers,
+                });
+                const { data: { token, instanceServers: [{ endpoint }] } } = await body.json() as KuRes_apply_connect_token;
+                const id = Date.now().toString();
+                const ws = new WebSocket(endpoint + '?' + qsFromObj({ token, id }));
+                const messages: any[] = [];
+                const receivedTypes = new Set<string>();
+                const messagingState = {
+                    1: 'welcome',
+                    2: 'start-messaging',
+                    3: 'messaging',
+                } as const;
+
+
+                ws.on('message', (data) => {
+                    const message = JSON.parse(data.toString()) as KuWs;
+
+                    receivedTypes.add(message.type);
+                    message.type !== 'message' && messages.push(message);
+
+
+                    if (message.type === 'welcome') {
+                        expect(messagingState[receivedTypes.size]).toBe('welcome');
+                        const level2: KuWsReq_level2 = {
+                            id, response: true, topic: '/market/level2:USDT-BTC', type: 'subscribe',
+                        };
+
+                        ws.send(JSON.stringify(level2));
+
+                        return;
+                    } else if (message.type === 'ack' && messages.filter(({ type }) => {
+
+                        return type === 'ack';
+                    }).length === 1) {
+                        expect(messagingState[receivedTypes.size]).toBe('start-messaging');
+                        const level2_unsubscribe: KuWsReq_level2_unsubscribe = {
+                            id,
+                            privateChannel: true,
+                            response: true,
+                            topic: '/market/level2:USDT-BTC',
+                            type: 'unsubscribe',
+                        };
+
+                        ws.send(JSON.stringify(level2_unsubscribe));
+
+                        return;
+                    } else if (message.type === 'ack' && messages.filter(({ type }) => {
+
+                        return type === 'ack';
+                    }).length === 2) {
+                        // unsubscribed
+                        ws.once('close', (err) => {
+                            err && console.warn(err);
+
+                            done();
+                        });
+
+                        ws.close();
+
+                        return;
+                    }
+                });
+            })();
+        }, 15_000);
 
 
         itif({
@@ -155,7 +234,7 @@ export function describe_subscribe_level2(
                     if (!expects.length && !startUnsubscribing) {
                         startUnsubscribing = true;
 
-                        ws.send(JSON.stringify(level2_unsubscribe));                        
+                        ws.send(JSON.stringify(level2_unsubscribe));
                     } else if (expects.length) {
                         expect(message.type).toBe(expected?.type);
                     }
