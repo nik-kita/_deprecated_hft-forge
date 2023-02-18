@@ -7,9 +7,6 @@ import { KuSignGeneratorService } from '../../lib/ku-http-api.sign-generator.ser
 
 export function describe_ku_req_apply_private_ws_connect_token(
     name: 'Check Kucoin http request to apply connect token for private ws channels',
-    getData: () => ({
-        //
-    }),
 ) {
 
     return describe(name, () => {
@@ -33,13 +30,10 @@ export function describe_ku_req_apply_private_ws_connect_token(
                 method: 'POST',
             };
             const headers = signGenerator.generateHeaders(payload, process.env as any);
-            const { body, statusCode } = await httpClient.req(`${KU_BASE_URL}${payload.endpoint}`, {
+            const { statusCode } = await httpClient.req(`${KU_BASE_URL}${payload.endpoint}`, {
                 method: payload.method,
                 headers,
             });
-            const jData = await body.json();
-
-            console.log(JSON.stringify(jData, null, 4));
 
             expect(statusCode).toBeLessThan(400);
         });

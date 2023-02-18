@@ -6,7 +6,6 @@ import { request } from 'undici';
 
 export const describe_apply_public_ws_connect_token = (
     name: `Check ${typeof KU_POST_ENDPOINT.apply_ws_connect_token.public} endpoint`,
-    getMocks: () => unknown,
 ) => {
 
     return describe(name, () => {
