@@ -7,7 +7,6 @@ import { KuSignGeneratorService } from '../..';
 
 export const describe_full_order_book_request = (
     name: `Check ${typeof KU_GET_ENDPOINT.order_book.full} endpoint`,
-    getMocks: () => unknown,
 ) => {
 
     return describe(name, () => {

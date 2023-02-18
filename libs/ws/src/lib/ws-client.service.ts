@@ -1,5 +1,5 @@
 import { WsReadyState, WS_READY_STATE_V_K } from '@hft-forge/types/common';
-import { BindThis } from '@hft-forge/utils';
+import { BindThis, qsFromObj } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
 import { WebSocket } from 'ws';
 
@@ -16,26 +16,30 @@ export class WsClientService {
 
     __getOriginWs() { return this.ws; }
 
-    connect(url: `ws${string}` | string) {
+    connect(url: `ws${string}` | string, data?: object) {
+        const _url = data
+            ? `${url}?${qsFromObj(data)}`
+            : url;
+
         return new Promise<void>((resolve, reject) => {
             const onOpenCb = () => {
                 resolve();
             };
             const open = () => {
-                this.ws = new WebSocket(url);
+                this.ws = new WebSocket(_url);
                 this.ws.once('open', onOpenCb);
             };
 
             if (!this.ws) {
                 open();
             } else if (this.getWsState() === 'OPEN') {
-                if (this.ws.url === url) resolve();
+                if (this.ws.url === _url) resolve();
                 else {
                     this.ws.once('close', open);
                     this.ws.close();
                 }
             } else if (this.getWsState() === 'CONNECTING') {
-                if (this.ws.url === url) this.ws.once('open', resolve);
+                if (this.ws.url === _url) this.ws.once('open', resolve);
                 else {
                     this.ws.once('open', () => {
                         this.ws.once('close', open);

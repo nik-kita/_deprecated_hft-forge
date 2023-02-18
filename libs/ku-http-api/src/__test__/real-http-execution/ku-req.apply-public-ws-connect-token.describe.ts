@@ -1,4 +1,4 @@
-import { KuReq_apply_ws_public_connect_token, KU_BASE_URL, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
+import { KuReq_apply_public_connect_token, KU_BASE_URL, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
 import { itif } from '@hft-forge/utils';
 import { describe, expect } from '@jest/globals';
 import { request } from 'undici';
@@ -6,12 +6,11 @@ import { request } from 'undici';
 
 export const describe_apply_public_ws_connect_token = (
     name: `Check ${typeof KU_POST_ENDPOINT.apply_ws_connect_token.public} endpoint`,
-    getMocks: () => unknown,
 ) => {
 
     return describe(name, () => {
         itif({ customCondition: true })('Should get "apply token" for public ws chanel', async () => {
-            const payload: KuReq_apply_ws_public_connect_token = {
+            const payload: KuReq_apply_public_connect_token = {
                 endpoint: KU_POST_ENDPOINT.apply_ws_connect_token.public,
                 method: 'POST',
             };
