@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
 import { KU_BASE_URL, KU_ENV_KEYS, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
-import { genMockConfigModule } from '@hft-forge/utils';
+import { genMockConfigModule } from '@hft-forge/test-pal/mocks';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { request } from 'undici';

@@ -1,4 +1,4 @@
-import { itif } from '../core';
+import { itif } from '..';
 
 
 
