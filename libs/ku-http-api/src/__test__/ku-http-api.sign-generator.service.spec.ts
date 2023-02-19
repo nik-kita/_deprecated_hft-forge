@@ -42,7 +42,7 @@ describe(KuSignGeneratorService.name, () => {
                 endpoint: '/test2',
             } as const,
         }
-    ])('Should generate $expectedStr from $sourceStr', ({ expectedStr, source }) => {
+    ])('Should generate correct headers', ({ expectedStr, source }) => {
         jest
             .useFakeTimers()
             .setSystemTime(new Date('2020-01-01'));

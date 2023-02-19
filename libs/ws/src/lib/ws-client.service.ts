@@ -1,8 +1,8 @@
 import { WsReadyState, WS_READY_STATE_V_K } from '@hft-forge/types/common';
-import { BindThis, qsFromObj } from '@hft-forge/utils';
+import { qsFromObj } from '@hft-forge/utils';
+import { BindThis } from '@hft-forge/utils/decorators';
 import { Injectable } from "@nestjs/common";
 import { WebSocket } from 'ws';
-
 @Injectable()
 @BindThis()
 export class WsClientService {

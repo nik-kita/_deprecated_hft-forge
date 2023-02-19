@@ -1,0 +1,190 @@
+import { itif } from '@hft-forge/test-pal/core';
+import { privateConnectToKuWs } from '@hft-forge/test-pal/preludes';
+import { KuWs, KuWsReq_level2, KuWsReq_level2_unsubscribe, KuWsResType, KU_ENV_KEYS } from '@hft-forge/types/ku';
+import { WebSocket } from 'ws';
+
+describe('Level2 Kucoin subscription', () => {
+    let ws: WebSocket;
+
+    beforeEach(async () => {
+        ws = await privateConnectToKuWs();
+    });
+
+    afterEach(() => {
+        if (ws?.readyState === WebSocket.OPEN) {
+            ws.close();
+        }
+    });
+
+    itif({
+        needEnv: {
+            envFilePath: '.test.env',
+            envVariables: KU_ENV_KEYS.map((k) => k),
+        },
+    })('Should unsubscribe with "private=true"', (done) => {
+        const id = Date.now().toString();
+        const messages: any[] = [];
+        const receivedTypes = new Set<string>();
+        const messagingState = {
+            1: 'welcome',
+            2: 'start-messaging',
+            3: 'messaging',
+        } as const;
+
+        ws.on('message', (data) => {
+            const message = JSON.parse(data.toString()) as KuWs;
+
+            receivedTypes.add(message.type);
+            message.type !== 'message' && messages.push(message);
+
+            if (message.type === 'welcome') {
+                expect(messagingState[receivedTypes.size]).toBe('welcome');
+                const level2: KuWsReq_level2 = {
+                    id, response: true, topic: '/market/level2:USDT-BTC', type: 'subscribe',
+                };
+
+                ws.send(JSON.stringify(level2));
+
+                return;
+            } else if (message.type === 'ack' && messages.filter(({ type }) => {
+
+                return type === 'ack';
+            }).length === 1) {
+                expect(messagingState[receivedTypes.size]).toBe('start-messaging');
+                const level2_unsubscribe: KuWsReq_level2_unsubscribe = {
+                    id,
+                    privateChannel: true,
+                    response: true,
+                    topic: '/market/level2:USDT-BTC',
+                    type: 'unsubscribe',
+                };
+
+                ws.send(JSON.stringify(level2_unsubscribe));
+
+                return;
+            } else if (message.type === 'ack' && messages.filter(({ type }) => {
+
+                return type === 'ack';
+            }).length === 2) {
+                // unsubscribed
+                ws.once('close', (err) => {
+                    err && console.warn(err);
+
+                    done();
+                });
+
+                ws.close();
+
+                return;
+            }
+        });
+    }, 15_000);
+
+
+    itif({
+        needEnv: {
+            envFilePath: '.test.env',
+            envVariables: KU_ENV_KEYS.map((k) => k),
+        }
+    })('Should receive "ack" message after subscription', (done) => {
+        const expects: {
+            type: KuWsResType,
+        }[] = [
+                { type: 'message' },
+                { type: 'ack' },
+                { type: 'welcome' },
+            ];
+        const id = Date.now().toString();
+        let completed = false;
+
+        ws.on('message', (data) => {
+            const expected = expects.pop();
+
+            if (!expects.length && !completed) {
+                completed = true;
+
+                ws.on('close', (err) => {
+                    err && console.warn(err);
+
+                    done();
+                });
+                ws.terminate(); // TODO why "close" don't close?
+            } else {
+                const message = JSON.parse(data.toString()) as any;
+
+                expect(message.type).toBe(expected?.type);
+            }
+
+            if (expected?.type === 'welcome') {
+                const level2_subscription: KuWsReq_level2 = {
+                    id,
+                    response: true,
+                    type: 'subscribe',
+                    topic: '/market/level2:BTC-USDT',
+                };
+
+                ws.send(JSON.stringify(level2_subscription));
+            }
+        });
+    }, 10_000);
+
+
+    itif({
+        needEnv: {
+            envFilePath: '.test.env',
+            envVariables: KU_ENV_KEYS.map((k) => k),
+        }
+    })('Should unsubscribe from level2', (done) => {
+        const id = Date.now().toString();
+        const level2_subscription: KuWsReq_level2 = {
+            id,
+            response: true,
+            type: 'subscribe',
+            topic: '/market/level2:BTC-USDT',
+        };
+        const level2_unsubscribe: KuWsReq_level2_unsubscribe = {
+            ...level2_subscription,
+            type: 'unsubscribe',
+            privateChannel: false,
+        };
+        const expects: {
+            type: KuWsResType,
+        }[] = [
+                { type: 'message' },
+                { type: 'ack' },
+                { type: 'welcome' },
+            ];
+
+        let startUnsubscribing = false;
+        let lastMessage = false;
+
+        ws.on('message', (data) => {
+            const expected = expects.pop();
+            const message = JSON.parse(data.toString()) as any;
+
+            lastMessage && expect('this message').toBe('is next after last');
+
+            if (expected?.type === 'welcome') {
+                ws.send(JSON.stringify(level2_subscription));
+            } else if (message.type === 'ack' && startUnsubscribing) {
+                lastMessage = true;
+
+                ws.once('close', (err) => {
+                    err && console.warn(err);
+
+                    done();
+                });
+                ws.close();
+            }
+
+            if (!expects.length && !startUnsubscribing) {
+                startUnsubscribing = true;
+
+                ws.send(JSON.stringify(level2_unsubscribe));
+            } else if (expects.length) {
+                expect(message.type).toBe(expected?.type);
+            }
+        });
+    }, 10_000);
+});
+
