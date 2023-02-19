@@ -1,3 +1,1 @@
-export default {
-    todo: null,
-};
+export { itif } from './itif.for-test.util';

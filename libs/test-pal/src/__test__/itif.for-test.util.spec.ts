@@ -1,4 +1,5 @@
-import { itif } from '..';
+import { itif } from '../core';
+
 
 
 describe(itif.name, () => {

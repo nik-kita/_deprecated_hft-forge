@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
+import { itif } from '@hft-forge/test-pal/core';
 import { KuReq_apply_private_connect_token, KU_BASE_URL, KU_ENV_KEYS } from '@hft-forge/types/ku';
-import { itif } from '@hft-forge/utils';
 import { KuSignGeneratorService } from '../../lib/ku-http-api.sign-generator.service';
 
 

@@ -5,7 +5,7 @@ import {
     KU_ENV_KEYS,
     KU_POST_ENDPOINT
 } from '@hft-forge/types/ku';
-import { itif } from '@hft-forge/utils';
+import { itif } from '@hft-forge/test-pal/core';
 import { WsClientService } from '@hft-forge/ws';
 import { afterEach, beforeEach, describe, expect } from '@jest/globals';
 

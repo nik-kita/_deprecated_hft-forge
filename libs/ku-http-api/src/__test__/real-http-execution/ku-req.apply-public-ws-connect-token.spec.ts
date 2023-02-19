@@ -1,5 +1,5 @@
 import { KuReq_apply_public_connect_token, KU_BASE_URL, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
-import { itif } from '@hft-forge/utils';
+import { itif } from '@hft-forge/test-pal/core';
 import { request } from 'undici';
 
 
