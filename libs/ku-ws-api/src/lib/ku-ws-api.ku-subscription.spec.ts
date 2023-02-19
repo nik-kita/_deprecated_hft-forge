@@ -13,6 +13,8 @@ describe(KuSubscriptionManager.name, () => {
             coins: ['USDT-BTC'],
         });
 
-        expect((sub as any)?.topics?.get('/market/level2')?.[0]).toBe('USDT-BTC');
+        expect((sub as any)?.topics?.get('/market/level2')?.coins?.[0]).toBe('USDT-BTC');
+        expect((sub as any)?.topics?.get('/market/level2')?.status).toBe('pre');
+
     });
 });

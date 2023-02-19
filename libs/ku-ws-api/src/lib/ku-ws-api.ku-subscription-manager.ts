@@ -1,5 +1,4 @@
-import { Coins } from '@hft-forge/types/common';
-import { KuWsReqSub, KuWsTopic } from '@hft-forge/types/ku';
+import { Coins, KuWsReqSub, KuWsSubscriptionStatus, KuWsTopic } from '@hft-forge/types/ku';
 
 
 
@@ -16,8 +15,14 @@ export class KuSubscriptionManager {
 
         const { id, topic, coins } = subscriptionRequest;
 
-        return new KuSubscriptionManager(id, new Map<KuWsTopic, Coins>().set(topic, coins));
+        return new KuSubscriptionManager(id, new Map<KuWsTopic, {
+            coins: Coins,
+            status: KuWsSubscriptionStatus,
+        }>().set(topic, { coins, status: 'pre' }));
     }
 
-    private constructor(private id: string, private topics: Map<KuWsTopic, Coins>) { }
+    private constructor(
+        private id: string,
+        private topics: Map<KuWsTopic, { coins: Coins, status: KuWsSubscriptionStatus }>,
+    ) { }
 }

@@ -1,3 +1,3 @@
-import { CurrencyPair } from "../ku";
+import { CurrencyPair } from "../..";
 
 export type Coins = [CurrencyPair, ...CurrencyPair[]] | ['all'];
