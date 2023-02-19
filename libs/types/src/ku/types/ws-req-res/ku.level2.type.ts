@@ -1,11 +1,11 @@
 import { CurrencyPair, KuUnsubscribe, KuWs, PriceSizeSeq } from "../common";
 
-export type Level2_topic = `/market/level2:${CurrencyPair}`;
+export type Level2_topic = '/market/level2';
 
 export type KuWsReq_level2 = KuWs<
     'subscribe',
     {
-        topic: Level2_topic,
+        topic: `${Level2_topic}:${CurrencyPair}`; // | `${Level2_topic}${string}`,
         response: boolean,
     }
 >;

@@ -1,3 +1,4 @@
+export { Coins } from './coins.type';
 export { DescribeInPortal } from './describe-in-portal.function.type';
 export { GateMessage } from './gate-message.type';
 export { DELETE, GET, HttpMethod, POST } from './http-method.const';

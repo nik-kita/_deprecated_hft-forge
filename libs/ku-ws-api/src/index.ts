@@ -1,3 +1,3 @@
-export { KuWsApiModule } from './lib/ku-ws-api.module';
-export { KuWsApiService } from './lib/ku-ws-api.service';
+export { KuWsApiModule } from './ku-ws-api.module';
+export { KuWsApiService } from './ku-ws-api.service';
 
