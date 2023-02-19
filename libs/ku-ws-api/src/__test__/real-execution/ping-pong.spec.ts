@@ -1,46 +1,15 @@
-import { HttpService } from '@hft-forge/http';
 import { itif } from '@hft-forge/test-pal/core';
-import {
-    KuRes_apply_connect_token,
-    KuWsConnectPayload, KuWsReq_ping, KuWsResType, KuWsRes_welcome, KU_BASE_URL, KU_ENV_KEYS,
-    KU_POST_ENDPOINT
-} from '@hft-forge/types/ku';
-import { WsClientService } from '@hft-forge/ws';
+import { privateConnectToKuWs, publicConnectToKuWs } from '@hft-forge/test-pal/preludes';
+import { KuWsReq_ping, KuWsResType, KuWsRes_welcome, KU_ENV_KEYS } from '@hft-forge/types/ku';
 
 
-describe('Should subscribe: ping <=> pong', () => {
-    let wsClient: WsClientService;
-    let httpClient: HttpService;
-
-
-    beforeEach(async () => {
-        wsClient = new WsClientService();
-        httpClient = new HttpService();
-    });
-
+describe('Check "ping <=> pong" messaging after subscribing', () => {
     itif({
         needEnv: { envFilePath: '.test.env', envVariables: KU_ENV_KEYS.map((k) => k) },
-    })('Should subscribe and receive "welcome" message', async () => {
-        const offTimeout = setTimeout(() => {
-            expect('not').toBe('here');
-        }, 7_000);
-        const { body } = await httpClient
-            .req(
-                `${KU_BASE_URL}${KU_POST_ENDPOINT.apply_ws_connect_token.public}`,
-                { method: 'POST' },
-            );
-        const jBody = await body.json() as KuRes_apply_connect_token;
-        const { token, instanceServers: [{ endpoint }] } = jBody.data;
-        const connectPayload: KuWsConnectPayload = {
-            id: Date.now(),
-            token,
-        };
+    })('With public connection', async () => {
+        const originWs = await publicConnectToKuWs();
 
-        await wsClient.connect(endpoint, connectPayload);
-
-        const originWs = wsClient.__getOriginWs();
-
-        await new Promise<void>((resolve) => {
+        await new Promise<void>((resolve, reject) => {
             let messageCounter = 0;
 
             originWs.on('message', (data) => {
@@ -59,19 +28,52 @@ describe('Should subscribe: ping <=> pong', () => {
                     expect(message.type).toBe('pong' satisfies KuWsResType);
 
                     resolve();
+                } else {
+                    reject(`Unexpected message type ${message.type}`);
                 }
 
                 ++messageCounter;
             });
         });
 
-        await wsClient.disconnect();
+        originWs.close();
 
-        clearTimeout(offTimeout);
-    }, 15_000);
+    }, 10_000);
 
-    afterEach(async () => {
-        await wsClient?.disconnect();
-    });
+    itif({
+        needEnv: { envFilePath: '.test.env', envVariables: KU_ENV_KEYS.map((k) => k) },
+    })('With private connection', async () => {
+        const originWs = await privateConnectToKuWs();
+
+        await new Promise<void>((resolve, reject) => {
+            let messageCounter = 0;
+
+            originWs.on('message', (data) => {
+                const message = JSON.parse(data.toString()) as KuWsRes_welcome;
+
+                if (messageCounter === 0) {
+                    expect(message.type).toBe('welcome' satisfies KuWsResType);
+
+                    const pingPayload: KuWsReq_ping = {
+                        id: message.id,
+                        type: 'ping',
+                    };
+
+                    originWs.send(JSON.stringify(pingPayload));
+                } else if (messageCounter === 1) {
+                    expect(message.type).toBe('pong' satisfies KuWsResType);
+
+                    resolve();
+                } else {
+                    reject(`Unexpected message type ${message.type}`);
+                }
+
+                ++messageCounter;
+            });
+        });
+
+        originWs.close();
+
+    }, 10_000);
 });
 
