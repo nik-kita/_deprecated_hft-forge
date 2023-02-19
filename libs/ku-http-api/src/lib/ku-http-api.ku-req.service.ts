@@ -1,6 +1,6 @@
 import { HttpService } from '@hft-forge/http';
 import { KuEnv, KuReq, KuReq_apply_public_connect_token, KuReq_order_book_level_2_full, KU_BASE_URL, KU_GET_ENDPOINT, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
-import { BindThis } from '@hft-forge/utils';
+import { BindThis } from '@hft-forge/utils/decorators';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import { KuSignGeneratorService } from './ku-http-api.sign-generator.service';

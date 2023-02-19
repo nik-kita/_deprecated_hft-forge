@@ -1,4 +1,4 @@
-import { BindThis } from '..';
+import { BindThis } from '.';
 
 class NonDecorated {
     secret = 'world';

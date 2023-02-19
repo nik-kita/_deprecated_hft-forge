@@ -64,6 +64,9 @@
       "@hft-forge/utils": [
         "libs/utils/src/index.ts"
       ],
+      "@hft-forge/utils/decorators": [
+        "libs/utils/src/decorators/index.ts"
+      ],
       "@hft-forge/ws": [
         "libs/ws/src/index.ts"
       ]
