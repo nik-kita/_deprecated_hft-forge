@@ -1,5 +1,4 @@
-import { KuRes_order_book_level2_full } from '@hft-forge/types/ku';
-
+import { KuRes } from '@hft-forge/types/ku/http';
 
 export const fixture_KuRes_order_book_level_2_full = {
     "code": "200000",
@@ -168927,4 +168926,4 @@ export const fixture_KuRes_order_book_level_2_full = {
             ]
         ]
     }
-} as unknown as KuRes_order_book_level2_full;
+} as unknown as KuRes<'/api/v3/market/orderbook/level2'>;

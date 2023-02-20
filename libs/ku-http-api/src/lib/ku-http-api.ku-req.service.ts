@@ -1,19 +1,21 @@
 import { HttpService } from '@hft-forge/http';
-import { KuEnv, KuReq, KuReq_apply_public_connect_token, KuReq_order_book_level_2_full, KU_BASE_URL, KU_GET_ENDPOINT, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
+import { CurrencyPair, KU_ENV_KEYS } from '@hft-forge/types/ku/common';
 import { BindThis } from '@hft-forge/utils/decorators';
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
+import { KuReq } from '@hft-forge/types/ku/http';
 import { KuSignGeneratorService } from './ku-http-api.sign-generator.service';
 
+type _Keys = Record<(typeof KU_ENV_KEYS)[number], string>;
 @Injectable()
 @BindThis()
 export class KuReqService {
-    private keys: KuEnv;
+    private keys: _Keys;
 
     constructor(
         private httpService: HttpService,
         private signGeneratorService: KuSignGeneratorService,
-        private configService: ConfigService<KuEnv, true>,
+        private configService: ConfigService<_Keys, true>,
     ) {
         this.keys = {
             API_KEY: this.configService.get('API_KEY'),
@@ -41,36 +43,28 @@ export class KuReqService {
     }
 
     private postApplyWsConnectToken() {
-        const payload: KuReq_apply_public_connect_token = {
-            endpoint: KU_POST_ENDPOINT.apply_ws_connect_token.public,
+        const url: KuReq<'/api/v1/bullet-public'>[0]['url'] = 'https://api.kucoin.com/api/v1/bullet-public';
+        const payload: KuReq<'/api/v1/bullet-public'>[1] = {
             method: 'POST'
         };
 
-        return this.sendPublicRequest(payload);
+        return this.httpService.req(url, payload);
     }
 
-    private async getFullOrderBook(symbol: string) {
-        const payload: KuReq_order_book_level_2_full = {
-            endpoint: KU_GET_ENDPOINT.order_book.full,
+    private async getFullOrderBook(symbol: CurrencyPair) {
+        const url: KuReq<'/api/v3/market/orderbook/level2'>[0]['url'] = 'https://api.kucoin.com/api/v3/market/orderbook/level2';
+        const forSignature: KuReq<'/api/v3/market/orderbook/level2'>[0]['forSignature'] = {
+            endpoint: '/api/v3/market/orderbook/level2',
+            method: 'GET',
+            query: { symbol },
+        };
+        const headers = this.signGeneratorService.generateHeaders(forSignature, this.keys);
+        const payload: KuReq<'/api/v3/market/orderbook/level2'>[1] = {
+            headers,
             method: 'GET',
             query: { symbol },
         };
 
-        return this.sendPrivateRequest(payload);
-    }
-
-    private sendPublicRequest(payload: KuReq<any, any, any>) {
-        const { endpoint, ...options } = payload;
-        const url = `${KU_BASE_URL}${endpoint}`;
-
-        return this.httpService.req(url, options);
-    }
-
-    private sendPrivateRequest(payload: KuReq<any, any, any, any>) {
-        const headers = this.signGeneratorService.generateHeaders(payload, this.keys);
-        const url = `${KU_BASE_URL}${payload.endpoint}`;
-        const { endpoint, ...options } = { ...payload, headers };
-
-        return this.httpService.req(url, options);
+        return this.httpService.req(url, payload);
     }
 }

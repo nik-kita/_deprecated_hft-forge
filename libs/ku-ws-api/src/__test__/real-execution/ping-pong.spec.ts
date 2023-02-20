@@ -1,31 +1,33 @@
 import { itif } from '@hft-forge/test-pal/core';
 import { privateConnectToKuWs, publicConnectToKuWs } from '@hft-forge/test-pal/preludes';
-import { KuWsReq_ping, KuWsResType, KuWsRes_welcome, KU_ENV_KEYS } from '@hft-forge/types/ku';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { AnyChannel, KuPub, KuSub } from '@hft-forge/types/ku/ws';
 
 
 describe('Check "ping <=> pong" messaging after subscribing', () => {
     itif({
-        needEnv: { envFilePath: '.test.env', envVariables: KU_ENV_KEYS.map((k) => k) },
+        needEnv: { envFilePath: '.test.env', envVariables: KU_ENV_KEYS },
     })('With public connection', async () => {
         const originWs = await publicConnectToKuWs();
 
         await new Promise<void>((resolve, reject) => {
             let messageCounter = 0;
+            const id = Date.now().toString();
 
             originWs.on('message', (data) => {
-                const message = JSON.parse(data.toString()) as KuWsRes_welcome;
+                const message = JSON.parse(data.toString()) as KuSub<AnyChannel>['payload'];
 
                 if (messageCounter === 0) {
-                    expect(message.type).toBe('welcome' satisfies KuWsResType);
+                    expect(message.type).toBe('welcome');
 
-                    const pingPayload: KuWsReq_ping = {
-                        id: message.id,
+                    const pingPayload: KuPub<'PING_PONG'>['payload'] = {
+                        id,
                         type: 'ping',
                     };
 
                     originWs.send(JSON.stringify(pingPayload));
                 } else if (messageCounter === 1) {
-                    expect(message.type).toBe('pong' satisfies KuWsResType);
+                    expect(message.type).toBe('pong' satisfies KuSub<AnyChannel>['payload']['type']);
 
                     resolve();
                 } else {
@@ -41,27 +43,28 @@ describe('Check "ping <=> pong" messaging after subscribing', () => {
     }, 10_000);
 
     itif({
-        needEnv: { envFilePath: '.test.env', envVariables: KU_ENV_KEYS.map((k) => k) },
+        needEnv: { envFilePath: '.test.env', envVariables: KU_ENV_KEYS },
     })('With private connection', async () => {
         const originWs = await privateConnectToKuWs();
 
         await new Promise<void>((resolve, reject) => {
             let messageCounter = 0;
+            const id = Date.now().toString();
 
             originWs.on('message', (data) => {
-                const message = JSON.parse(data.toString()) as KuWsRes_welcome;
+                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['payload'];
 
                 if (messageCounter === 0) {
-                    expect(message.type).toBe('welcome' satisfies KuWsResType);
+                    expect(message.type).toBe('welcome' satisfies KuSub<AnyChannel>['payload']['type']);
 
-                    const pingPayload: KuWsReq_ping = {
-                        id: message.id,
+                    const pingPayload: KuPub<'PING_PONG'>['payload'] = {
+                        id,
                         type: 'ping',
                     };
 
                     originWs.send(JSON.stringify(pingPayload));
                 } else if (messageCounter === 1) {
-                    expect(message.type).toBe('pong' satisfies KuWsResType);
+                    expect(message.type).toBe('pong' satisfies KuSub<AnyChannel>['payload']['type']);
 
                     resolve();
                 } else {

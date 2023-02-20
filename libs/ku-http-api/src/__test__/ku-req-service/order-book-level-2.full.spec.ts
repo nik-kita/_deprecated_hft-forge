@@ -1,6 +1,7 @@
 import { HttpService } from '@hft-forge/http';
-import { KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { genMockConfigModule } from '@hft-forge/test-pal/mocks';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { KuReq } from '@hft-forge/types/ku/http';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as jesst from 'jest-mock';
 import { request } from 'undici';
@@ -19,7 +20,7 @@ describe('KuReqService.getFullOrderBook()', () => {
     beforeEach(async () => {
         mockApp = await Test.createTestingModule({
             imports: [
-                genMockConfigModule(KU_ENV_KEYS.map((k) => k)),
+                genMockConfigModule(KU_ENV_KEYS),
                 KuHttpApiModule,
             ],
         }).compile();
@@ -39,7 +40,9 @@ describe('KuReqService.getFullOrderBook()', () => {
         ) => {
             wasHere = already;
 
-            expect(url).toBe(`${KU_BASE_URL}${KU_GET_ENDPOINT.order_book.full}`);
+            const expectedUrl: KuReq<'/api/v3/market/orderbook/level2'>[0]['url'] = 'https://api.kucoin.com/api/v3/market/orderbook/level2';
+
+            expect(url).toBe(expectedUrl);
             expect(options?.method).toBe('GET');
             expect(Object.keys(options?.query || {})).toContain('symbol');
 

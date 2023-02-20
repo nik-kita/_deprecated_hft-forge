@@ -1,8 +1,7 @@
 import { HttpService } from '@hft-forge/http';
 import { WsClientService } from '@hft-forge/ws';
 import { Test, TestingModule } from '@nestjs/testing';
-import { KuWsApiModule } from '../../lib/ku-ws-api.module';
-
+import { KuWsApiModule } from '../..';
 
 
 describe('Check all members of /KuWsApiModule/ after its import', () => {

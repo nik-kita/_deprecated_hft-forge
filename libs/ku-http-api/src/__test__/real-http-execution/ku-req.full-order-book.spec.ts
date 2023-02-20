@@ -1,25 +1,30 @@
-import { KuReq_order_book_level_2_full, KU_BASE_URL, KU_ENV_KEYS, KU_GET_ENDPOINT } from '@hft-forge/types/ku';
 import { itif } from '@hft-forge/test-pal/core';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { KuReq } from '@hft-forge/types/ku/http';
 import { request } from 'undici';
 import { KuSignGeneratorService } from '../..';
 
 
-describe(`Check ${typeof KU_GET_ENDPOINT.order_book.full} endpoint`, () => {
+describe(`Check LEVEL_2 endpoint`, () => {
     itif({
         needEnv: {
             envFilePath: '.test.env',
-            envVariables: KU_ENV_KEYS.map((k) => k),
+            envVariables: KU_ENV_KEYS,
         },
     })('Should get full order book', async () => {
-        const payload: KuReq_order_book_level_2_full = {
-            endpoint: KU_GET_ENDPOINT.order_book.full,
-            method: 'GET',
-            query: { symbol: 'BTC-USDT' },
+        const { forSignature, url }: KuReq<'/api/v1/bullet-private'>[0] = {
+            url: 'https://api.kucoin.com/api/v1/bullet-private',
+            forSignature: {
+                endpoint: '/api/v1/bullet-private',
+                method: 'POST',
+            },
         };
-        const kuReqSignService = new KuSignGeneratorService();
-        const headers = kuReqSignService.generateHeaders(payload, process.env as any);
-        const { endpoint, ...options } = { ...payload, headers };
-        const res = await request(`${KU_BASE_URL}${endpoint}`, options);
+        const headers = new KuSignGeneratorService().generateHeaders(forSignature, process.env);
+        const payload: KuReq<'/api/v1/bullet-private'>[1] = {
+            headers,
+            method: 'POST',
+        };
+        const res = await request(url, payload);
 
         expect(res).toBeDefined();
         expect(res.body).toBeDefined();

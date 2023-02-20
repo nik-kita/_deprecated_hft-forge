@@ -1,7 +1,13 @@
 import { itif } from '@hft-forge/test-pal/core';
 import { privateConnectToKuWs } from '@hft-forge/test-pal/preludes';
-import { KuWs, KuWsReq_level2, KuWsReq_level2_unsubscribe, KuWsResType, KU_ENV_KEYS } from '@hft-forge/types/ku';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { AnyChannel, KuPub, KuSub } from '@hft-forge/types/ku/ws';
 import { WebSocket } from 'ws';
+
+
+
+type _MessageType = KuSub<AnyChannel>['payload']['type'];
+
 
 describe('Level2 Kucoin subscription', () => {
     let ws: WebSocket;
@@ -19,7 +25,7 @@ describe('Level2 Kucoin subscription', () => {
     itif({
         needEnv: {
             envFilePath: '.test.env',
-            envVariables: KU_ENV_KEYS.map((k) => k),
+            envVariables: KU_ENV_KEYS,
         },
     })('Should unsubscribe with "private=true"', (done) => {
         const id = Date.now().toString();
@@ -31,16 +37,22 @@ describe('Level2 Kucoin subscription', () => {
             3: 'messaging',
         } as const;
 
+
         ws.on('message', (data) => {
-            const message = JSON.parse(data.toString()) as KuWs;
+            const message = JSON.parse(data.toString()) as KuSub<AnyChannel>['payload'];
 
             receivedTypes.add(message.type);
             message.type !== 'message' && messages.push(message);
 
             if (message.type === 'welcome') {
                 expect(messagingState[receivedTypes.size]).toBe('welcome');
-                const level2: KuWsReq_level2 = {
-                    id, response: true, topic: '/market/level2:USDT-BTC', type: 'subscribe',
+
+                const level2: KuPub<'LEVEL_2'>['payload'] = {
+                    id,
+                    response: true,
+                    topic: '/market/level2:USDT-BTC',
+                    type: 'subscribe',
+                    privateChannel: false,
                 };
 
                 ws.send(JSON.stringify(level2));
@@ -51,7 +63,7 @@ describe('Level2 Kucoin subscription', () => {
                 return type === 'ack';
             }).length === 1) {
                 expect(messagingState[receivedTypes.size]).toBe('start-messaging');
-                const level2_unsubscribe: KuWsReq_level2_unsubscribe = {
+                const level2_unsubscribe: KuPub<'LEVEL_2'>['payload'] = {
                     id,
                     privateChannel: true,
                     response: true,
@@ -66,7 +78,6 @@ describe('Level2 Kucoin subscription', () => {
 
                 return type === 'ack';
             }).length === 2) {
-                // unsubscribed
                 ws.once('close', (err) => {
                     err && console.warn(err);
 
@@ -84,11 +95,11 @@ describe('Level2 Kucoin subscription', () => {
     itif({
         needEnv: {
             envFilePath: '.test.env',
-            envVariables: KU_ENV_KEYS.map((k) => k),
+            envVariables: KU_ENV_KEYS,
         }
     })('Should receive "ack" message after subscription', (done) => {
         const expects: {
-            type: KuWsResType,
+            type: _MessageType,
         }[] = [
                 { type: 'message' },
                 { type: 'ack' },
@@ -116,11 +127,12 @@ describe('Level2 Kucoin subscription', () => {
             }
 
             if (expected?.type === 'welcome') {
-                const level2_subscription: KuWsReq_level2 = {
+                const level2_subscription: KuPub<'LEVEL_2'>['payload'] = {
                     id,
                     response: true,
                     type: 'subscribe',
                     topic: '/market/level2:BTC-USDT',
+                    privateChannel: false,
                 };
 
                 ws.send(JSON.stringify(level2_subscription));
@@ -132,23 +144,24 @@ describe('Level2 Kucoin subscription', () => {
     itif({
         needEnv: {
             envFilePath: '.test.env',
-            envVariables: KU_ENV_KEYS.map((k) => k),
+            envVariables: KU_ENV_KEYS,
         }
     })('Should unsubscribe from level2', (done) => {
         const id = Date.now().toString();
-        const level2_subscription: KuWsReq_level2 = {
+        const level2_subscription: KuPub<'LEVEL_2'>['payload'] = {
             id,
             response: true,
             type: 'subscribe',
             topic: '/market/level2:BTC-USDT',
+            privateChannel: false,
         };
-        const level2_unsubscribe: KuWsReq_level2_unsubscribe = {
+        const level2_unsubscribe: KuPub<'LEVEL_2'>['payload'] = {
             ...level2_subscription,
             type: 'unsubscribe',
             privateChannel: false,
         };
         const expects: {
-            type: KuWsResType,
+            type: any,
         }[] = [
                 { type: 'message' },
                 { type: 'ack' },

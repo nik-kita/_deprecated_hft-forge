@@ -1,16 +1,15 @@
-import { KuReq_apply_public_connect_token, KU_BASE_URL, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
 import { itif } from '@hft-forge/test-pal/core';
+import { KuReq } from '@hft-forge/types/ku/http';
 import { request } from 'undici';
 
 
-describe(`Check ${typeof KU_POST_ENDPOINT.apply_ws_connect_token.public} endpoint`, () => {
+describe(`Check PUBLIC_APPLY_CONNECT endpoint`, () => {
     itif({ customCondition: true })('Should get "apply token" for public ws chanel', async () => {
-        const payload: KuReq_apply_public_connect_token = {
-            endpoint: KU_POST_ENDPOINT.apply_ws_connect_token.public,
+        const { url }: KuReq<'/api/v1/bullet-public'>[0] = { url: 'https://api.kucoin.com/api/v1/bullet-public' };
+        const payload: KuReq<'/api/v1/bullet-public'>[1] = {
             method: 'POST',
         };
-        const { endpoint, ...options } = payload;
-        const res = await request(`${KU_BASE_URL}${endpoint}`, options);
+        const res = await request(url, payload);
 
         expect(res).toBeDefined();
         expect(res.body).toBeDefined();
