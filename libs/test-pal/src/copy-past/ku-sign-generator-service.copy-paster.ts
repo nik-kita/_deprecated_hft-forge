@@ -1,25 +1,27 @@
 import { HttpMethod } from '@hft-forge/types/common';
-import { KuEnv, KuReq } from '@hft-forge/types/ku';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { Endpoint, KuReq } from '@hft-forge/types/ku/http';
 import { qsFromObj } from '@hft-forge/utils';
 import { Injectable } from "@nestjs/common";
-import * as forge from 'node-forge';
+import * as nodeForge from 'node-forge';
+
 
 @Injectable()
 export class KuSignGeneratorService_copypast {
-    public generateHeaders<
-    M extends HttpMethod,
-    E extends string,
-    Q extends object | undefined = undefined,
-    B extends object | undefined = undefined,
-    >(options: KuReq<M, E, Q, B>, credentials: KuEnv) {
+    public generateHeaders(
+        {
+            method,
+            endpoint,
+            query,
+            body,
+        }: KuReq[0]['forSignature'] & { endpoint: Endpoint },
+        keys: Record<typeof KU_ENV_KEYS[number], string> | NodeJS.ProcessEnv,
+    ) {
         const {
             API_KEY,
             API_PASSPHRASE,
             API_SECRET,
-        } = credentials;
-        const {
-            method, endpoint, query, body,
-        } = options as KuReq<M, E, object, object>;
+        } = keys as any;
         const _endpoint = query && Object.keys(query).length
             ? `${endpoint}?${qsFromObj(query)}`
             : endpoint;
@@ -35,8 +37,7 @@ export class KuSignGeneratorService_copypast {
             'KC-API-PASSPHRASE': signedPassphrase,
             'KC-API-KEY-VERSION': '2',
             'Content-Type': 'application/json',
-        };
-
+        } as const;
     }
 
     private stringToSign(
@@ -51,20 +52,16 @@ export class KuSignGeneratorService_copypast {
             _body = JSON.stringify(body);
         }
 
-        const result = timestamp + method + endpoint + _body;
-
-        return result;
+        return `${timestamp}${method}${endpoint}${_body}`;
     }
 
     private signature(payload: string, apiSecret: string) {
-        const hmac = forge.hmac.create();
+        const hmac = nodeForge.hmac.create();
 
         hmac.start('sha256', apiSecret);
         hmac.update(payload);
 
-        const modern = forge.util.encode64(hmac.digest().bytes());
-
-        return modern;
+        return nodeForge.util.encode64(hmac.digest().bytes());
     }
 }
 

@@ -2,8 +2,7 @@ import { HttpService } from '@hft-forge/http';
 import { WsClientService } from '@hft-forge/ws';
 import { Module } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { KuWsApiModule } from '../../lib/ku-ws-api.module';
-import { KuWsApiService } from '../../lib/ku-ws-api.service';
+import { KuWsApiModule, KuWsApiService } from '../..';
 
 
 

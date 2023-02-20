@@ -1,9 +1,8 @@
-import { KuEnv } from '@hft-forge/types/ku';
 import { KuSignGeneratorService } from '..';
 
 
 describe(KuSignGeneratorService.name, () => {
-    const keys: KuEnv = {
+    const keys = {
         API_PASSPHRASE: 'hello world',
         API_SECRET: 'sim-sim',
         API_KEY: 'alahamora',
@@ -40,14 +39,14 @@ describe(KuSignGeneratorService.name, () => {
             source: {
                 method: 'POST',
                 endpoint: '/test2',
-            } as const,
+            },
         }
     ])('Should generate correct headers', ({ expectedStr, source }) => {
         jest
             .useFakeTimers()
             .setSystemTime(new Date('2020-01-01'));
 
-        const actual = new KuSignGeneratorService().generateHeaders(source, keys);
+        const actual = new KuSignGeneratorService().generateHeaders(source as any, keys);
         const expected = JSON.parse(expectedStr);
 
         expect(actual).toEqual(expected);

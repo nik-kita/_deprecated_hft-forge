@@ -1,6 +1,7 @@
 import { HttpService } from '@hft-forge/http';
-import { KU_BASE_URL, KU_ENV_KEYS, KU_POST_ENDPOINT } from '@hft-forge/types/ku';
 import { genMockConfigModule } from '@hft-forge/test-pal/mocks';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { KuReq } from '@hft-forge/types/ku/http';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { request } from 'undici';
@@ -17,7 +18,7 @@ describe('KuReqService.postApplyWsConnectToken() /public/', () => {
     beforeEach(async () => {
         mockApp = await Test.createTestingModule({
             imports: [
-                genMockConfigModule(KU_ENV_KEYS.map((k) => k)),
+                genMockConfigModule(KU_ENV_KEYS),
                 KuHttpApiModule,
             ],
         }).compile();
@@ -36,7 +37,9 @@ describe('KuReqService.postApplyWsConnectToken() /public/', () => {
         ) => {
             wasHere = already;
 
-            expect(url).toBe(`${KU_BASE_URL}${KU_POST_ENDPOINT.apply_ws_connect_token.public}`);
+            const expectedUrl: KuReq<'/api/v1/bullet-public'>[0]['url'] = 'https://api.kucoin.com/api/v1/bullet-public';
+
+            expect(url).toBe(expectedUrl);
             expect(options?.method).toBe('POST');
             expect(Object.keys(options?.query || {}).length).toBe(0);
 

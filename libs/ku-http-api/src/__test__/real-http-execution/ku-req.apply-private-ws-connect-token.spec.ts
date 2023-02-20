@@ -1,6 +1,7 @@
 import { HttpService } from '@hft-forge/http';
 import { itif } from '@hft-forge/test-pal/core';
-import { KuReq_apply_private_connect_token, KU_BASE_URL, KU_ENV_KEYS } from '@hft-forge/types/ku';
+import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
+import { KuReq } from '@hft-forge/types/ku/http';
 import { KuSignGeneratorService } from '../../lib/ku-http-api.sign-generator.service';
 
 
@@ -17,18 +18,22 @@ describe('Check Kucoin http request to apply connect token for private ws channe
     itif({
         needEnv: {
             envFilePath: '.test.env',
-            envVariables: KU_ENV_KEYS.map((k) => k),
+            envVariables: KU_ENV_KEYS,
         },
     })('Should receive token', async () => {
-        const payload: KuReq_apply_private_connect_token = {
-            endpoint: '/api/v1/bullet-private',
+        const { forSignature, url }: KuReq<'/api/v1/bullet-private'>[0] = {
+            url: 'https://api.kucoin.com/api/v1/bullet-private',
+            forSignature: {
+                endpoint: '/api/v1/bullet-private',
+                method: 'POST',
+            },
+        };
+        const headers = signGenerator.generateHeaders(forSignature, process.env);
+        const payload: KuReq<'/api/v1/bullet-private'>[1] = {
+            headers,
             method: 'POST',
         };
-        const headers = signGenerator.generateHeaders(payload, process.env as any);
-        const { statusCode } = await httpClient.req(`${KU_BASE_URL}${payload.endpoint}`, {
-            method: payload.method,
-            headers,
-        });
+        const { statusCode } = await httpClient.req(url, payload);
 
         expect(statusCode).toBeLessThan(400);
     });

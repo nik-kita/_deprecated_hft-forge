@@ -58,8 +58,14 @@
       "@hft-forge/types/forge-store": [
         "libs/types/src/forge-store/index.ts"
       ],
-      "@hft-forge/types/ku": [
-        "libs/types/src/ku/index.ts"
+      "@hft-forge/types/ku/http": [
+        "libs/types/src/ku/http/index.ts"
+      ],
+      "@hft-forge/types/ku/common": [
+        "libs/types/src/ku/common/index.ts"
+      ],
+      "@hft-forge/types/ku/ws": [
+        "libs/types/src/ku/ws/index.ts"
       ],
       "@hft-forge/utils": [
         "libs/utils/src/index.ts"
