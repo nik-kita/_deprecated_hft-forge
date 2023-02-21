@@ -50,7 +50,7 @@ describe('Level2 Kucoin subscription', () => {
                 const level2: KuPub<'LEVEL_2'>['payload'] = {
                     id,
                     response: true,
-                    topic: '/market/level2:USDT-BTC',
+                    topic: '/market/level2:BTC-USDT',
                     type: 'subscribe',
                     privateChannel: false,
                 };
@@ -67,7 +67,7 @@ describe('Level2 Kucoin subscription', () => {
                     id,
                     privateChannel: true,
                     response: true,
-                    topic: '/market/level2:USDT-BTC',
+                    topic: '/market/level2:BTC-USDT',
                     type: 'unsubscribe',
                 };
 
