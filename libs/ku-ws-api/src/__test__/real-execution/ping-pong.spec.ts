@@ -15,19 +15,19 @@ describe('Check "ping <=> pong" messaging after subscribing', () => {
             const id = Date.now().toString();
 
             originWs.on('message', (data) => {
-                const message = JSON.parse(data.toString()) as KuSub<AnyChannel>['payload'];
+                const message = JSON.parse(data.toString()) as KuSub<AnyChannel>['PAYLOAD'];
 
                 if (messageCounter === 0) {
                     expect(message.type).toBe('welcome');
 
-                    const pingPayload: KuPub<'PING_PONG'>['payload'] = {
+                    const pingPayload: KuPub<'PING_PONG'>['PAYLOAD'] = {
                         id,
                         type: 'ping',
                     };
 
                     originWs.send(JSON.stringify(pingPayload));
                 } else if (messageCounter === 1) {
-                    expect(message.type).toBe('pong' satisfies KuSub<AnyChannel>['payload']['type']);
+                    expect(message.type).toBe('pong' satisfies KuSub<AnyChannel>['PAYLOAD']['type']);
 
                     resolve();
                 } else {
@@ -52,19 +52,19 @@ describe('Check "ping <=> pong" messaging after subscribing', () => {
             const id = Date.now().toString();
 
             originWs.on('message', (data) => {
-                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['payload'];
+                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['PAYLOAD'];
 
                 if (messageCounter === 0) {
-                    expect(message.type).toBe('welcome' satisfies KuSub<AnyChannel>['payload']['type']);
+                    expect(message.type).toBe('welcome' satisfies KuSub<AnyChannel>['PAYLOAD']['type']);
 
-                    const pingPayload: KuPub<'PING_PONG'>['payload'] = {
+                    const pingPayload: KuPub<'PING_PONG'>['PAYLOAD'] = {
                         id,
                         type: 'ping',
                     };
 
                     originWs.send(JSON.stringify(pingPayload));
                 } else if (messageCounter === 1) {
-                    expect(message.type).toBe('pong' satisfies KuSub<AnyChannel>['payload']['type']);
+                    expect(message.type).toBe('pong' satisfies KuSub<AnyChannel>['PAYLOAD']['type']);
 
                     resolve();
                 } else {

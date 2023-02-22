@@ -4,7 +4,7 @@ import { KU_ENV_KEYS } from '@hft-forge/types/ku/common';
 import { AnyChannel, KuSub } from '@hft-forge/types/ku/ws';
 
 
-type _MessageType = KuSub<AnyChannel>['payload']['type'];
+type _MessageType = KuSub<AnyChannel>['PAYLOAD']['type'];
 
 describe('Check first message "welcome" after connection', () => {
     itif({
@@ -14,7 +14,7 @@ describe('Check first message "welcome" after connection', () => {
 
         await new Promise<void>((resolve) => {
             originWs.on('message', (data) => {
-                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['payload'];
+                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['PAYLOAD'];
 
                 expect(message.type).toBe('welcome' satisfies _MessageType);
                 expect(message.id).toBeDefined();
@@ -33,7 +33,7 @@ describe('Check first message "welcome" after connection', () => {
 
         await new Promise<void>((resolve) => {
             originWs.on('message', (data) => {
-                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['payload'];
+                const message = JSON.parse(data.toString()) as KuSub<'WELCOME'>['PAYLOAD'];
 
                 expect(message.type).toBe('welcome' satisfies _MessageType);
                 expect(message.id).toBeDefined();
