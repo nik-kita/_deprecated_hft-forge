@@ -52,7 +52,7 @@ describe('Level2 Kucoin subscription', () => {
                     response: true,
                     topic: '/market/level2:BTC-USDT',
                     type: 'subscribe',
-                    privateChannel: false,
+                    privateChannel: true,
                 };
 
                 ws.send(JSON.stringify(level2));
