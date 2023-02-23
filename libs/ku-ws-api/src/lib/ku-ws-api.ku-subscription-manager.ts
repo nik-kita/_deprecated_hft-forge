@@ -1,5 +1,6 @@
 import { CurrencyPair } from '@hft-forge/types/ku/common';
 import { Channel, KuPub } from '@hft-forge/types/ku/ws';
+import { HftForgeError } from '@hft-forge/utils';
 
 
 type _InitOptions<T extends Channel> = Omit<KuPub<T>['_PAYLOAD'], 'channel'> & { channel: T };
@@ -46,7 +47,22 @@ export class KuSubscriptionManager<T extends Channel> {
         this.topic = topic_second_splitted_by_comma_part;
     }
 
-    private updateByClient<T extends Channel>(options: _InitOptions<T>) {
+    public updateByAck() {
+        if (this.status === 'changing') {
+            this.status = 'active';
+        } else if (this.status === 'unsubscribing') {
+            this.status = 'inactive';
+        } else if (this.status === 'pending') {
+            this.status = 'active';
+        } else {
+            throw new HftForgeError('Incorrect subscription status', {
+                message: 'Not all "SubscriptionStatus" values are expected when "ack" message from server is received',
+                currentStatus: this.status,
+            });
+        }
+    }
+
+    public updateByClient<T extends Channel>(options: _InitOptions<T>) {
         const {
             privateChannel, topic_second_splitted_by_comma_part, type,
         } = options;
