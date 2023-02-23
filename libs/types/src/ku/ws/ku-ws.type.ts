@@ -1,5 +1,6 @@
 import { CurrencyPair } from "../common";
 
+
 type KuWs = {
     ACK: {
         PUB: never,
@@ -37,21 +38,26 @@ type KuWs = {
             },
         },
     },
+    /**
+     * Only channels below have business logic. Channels above are technical.
+     */
     LEVEL_2: {
         PUB: {
             PAYLOAD: {
-                id: string,
+                id: `/market/level2:${string}`,
                 type: 'subscribe' | 'unsubscribe',
                 topic: `/market/level2:${string}`,
                 privateChannel: boolean,
                 response: boolean,
             },
             _PAYLOAD: {
-                id: string,
+                id: `/market/level2:${string}`,
+                channel: '/market/level2:',
+                type: 'subscribe' | 'unsubscribe',
                 privateChannel: boolean,
                 response: true,
                 topic_first_part: '/market/level2:',
-                topic_second_splitted_by_comma_part: [CurrencyPair, ...CurrencyPair[]],
+                topic_second_splitted_by_comma_part: [CurrencyPair, ...CurrencyPair[]] | ['all'],
             },
         },
         SUB: {
@@ -75,7 +81,7 @@ type KuWs = {
 };
 
 export type AnyChannel = keyof KuWs;
-export type Channel = Exclude<AnyChannel, keyof Pick<Record<AnyChannel, never>, 'PING_PONG' | 'WELCOME'>>;
+export type Channel = Exclude<AnyChannel, keyof Pick<Record<AnyChannel, never>, 'PING_PONG' | 'WELCOME' | 'ACK'>>;
 
 export type KuPub<T extends AnyChannel = Channel> = KuWs[T]['PUB'];
 export type KuSub<T extends AnyChannel = Channel> = KuWs[T]['SUB'];
