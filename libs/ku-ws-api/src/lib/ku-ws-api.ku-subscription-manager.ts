@@ -27,7 +27,7 @@ export class KuSubscriptionManager<T extends Channel> {
     private channel: Channel;
     // Empty obj for 'all', 1 - for topics, 0 - when unsubscribing after 'all'
     private topic: [CurrencyPair, ...CurrencyPair[]] | ['all'];
-    private isIncludedTopic: boolean;
+    private isTopicIncluded: boolean;
 
     private constructor(options: _InitOptions<T>) {
         const { id, topic_second_splitted_by_comma_part, privateChannel, channel } = options;
@@ -39,6 +39,7 @@ export class KuSubscriptionManager<T extends Channel> {
         this.privacyStatus = privateChannel ? 'private-only' : 'public-only';
         this.channel = channel;
         this.topic = topic_second_splitted_by_comma_part;
+        this.isTopicIncluded = true;
     }
 
     public updateByAck() {
@@ -72,17 +73,17 @@ export class KuSubscriptionManager<T extends Channel> {
                  */
 
                 if (topic_second_splitted_by_comma_part[0] === 'all') {
-                    this.isIncludedTopic = true;
+                    this.isTopicIncluded = true;
                     this.topic = topic_second_splitted_by_comma_part;
                 } else if (this.topic[0] === 'all') {
-                    if (this.isIncludedTopic) {
+                    if (this.isTopicIncluded) {
                         // this.topic still be ["all"]
                     } else {
-                        this.isIncludedTopic = true;
+                        this.isTopicIncluded = true;
                         this.topic = topic_second_splitted_by_comma_part;
                     }
                 } else {
-                    if (this.isIncludedTopic) {
+                    if (this.isTopicIncluded) {
                         this.topic.push(...topic_second_splitted_by_comma_part as CurrencyPair[]);
                     } else {
                         (this.topic as CurrencyPair[]) = this.topic.filter((t) => !topic_second_splitted_by_comma_part.includes(t));
@@ -106,17 +107,17 @@ export class KuSubscriptionManager<T extends Channel> {
                  */
 
                 if (topic_second_splitted_by_comma_part[0] === 'all') {
-                    this.isIncludedTopic = false;
+                    this.isTopicIncluded = false;
                     this.topic = topic_second_splitted_by_comma_part;
                 } else if (this.topic[0] === 'all') {
-                    if (this.isIncludedTopic) {
+                    if (this.isTopicIncluded) {
                         this.topic = topic_second_splitted_by_comma_part;
-                        this.isIncludedTopic = false;
+                        this.isTopicIncluded = false;
                     } else {
                         // this.topic still be ["all"] (excluded)
                     }
                 } else {
-                    if (this.isIncludedTopic) {
+                    if (this.isTopicIncluded) {
                         (this.topic as CurrencyPair[]) = (this.topic as CurrencyPair[]).filter((t) => !topic_second_splitted_by_comma_part.includes(t));
                     } else {
                         this.topic.push(...(topic_second_splitted_by_comma_part as CurrencyPair[]));
