@@ -1,18 +1,12 @@
 import { CurrencyPair } from '@hft-forge/types/ku/common';
-import { Channel, KuPub } from '@hft-forge/types/ku/ws';
+import { Channel, KuPub, PrivacyStatus, SubscriptionStatus } from '@hft-forge/types/ku/ws';
 import { HftForgeError } from '@hft-forge/utils';
 
 
 type _InitOptions<T extends Channel> = Omit<KuPub<T>['_PAYLOAD'], 'channel'> & { channel: T };
 
-type SubscriptionStatus =
-    | "inactive"
-    | "pending"
-    | "active"
-    | "changing"
-    | "unsubscribing";
 
-type PrivacyStatus = 'private-only' | 'public-only' | 'private-public' | 'none';
+
 export class KuSubscriptionManager<T extends Channel> {
     public static init<T extends Channel>(options: _InitOptions<T>) {
         const { id } = options;
