@@ -3,8 +3,8 @@ import { Channel, KuPub, PrivacyStatus, SubscriptionStatus } from '@hft-forge/ty
 import { HftForgeError } from '@hft-forge/utils';
 
 
-type _InitOptions<T extends Channel> = Omit<KuPub<T>['_PAYLOAD'], 'channel'> & { channel: T };
-
+type _Options<T extends Channel> = Omit<KuPub<T>['_PAYLOAD'], 'channel'> & { channel: T };
+type _InitOptions<T extends Channel> = Omit<_Options<T>, 'type'> & { type: 'subscribe' };
 
 
 export class KuSubscriptionManager<T extends Channel> {
@@ -17,7 +17,7 @@ export class KuSubscriptionManager<T extends Channel> {
 
     private static _subscriptions = new Map<string, KuSubscriptionManager<Channel>>();
 
-    public static getSubscription<T extends Channel>(id: `${T}${string}`) {
+    public static getById<T extends Channel>(id: `${T}::${number}`) {
         return KuSubscriptionManager._subscriptions.get(id) as KuSubscriptionManager<T> | undefined;
     }
 
@@ -56,7 +56,7 @@ export class KuSubscriptionManager<T extends Channel> {
         }
     }
 
-    public updateByClient<T extends Channel>(options: _InitOptions<T>) {
+    public updateByClient<T extends Channel>(options: _Options<T>) {
         const {
             privateChannel, topic_second_splitted_by_comma_part, type,
         } = options;

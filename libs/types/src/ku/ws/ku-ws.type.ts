@@ -44,14 +44,14 @@ type KuWs = {
     LEVEL_2: {
         PUB: {
             PAYLOAD: {
-                id: `/market/level2:${string}`,
+                id: `LEVEL_2::${number}`,
                 type: 'subscribe' | 'unsubscribe',
                 topic: `/market/level2:${string}`,
                 privateChannel: boolean,
                 response: boolean,
             },
             _PAYLOAD: {
-                id: `/market/level2:${string}`,
+                id: `LEVEL_2::${string}`,
                 channel: '/market/level2:',
                 type: 'subscribe' | 'unsubscribe',
                 privateChannel: boolean,
