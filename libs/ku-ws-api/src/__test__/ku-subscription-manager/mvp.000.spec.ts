@@ -1,11 +1,11 @@
 import { CurrencyPair } from '@hft-forge/types/ku/common';
 import { PrivacyStatus, SubscriptionStatus } from '@hft-forge/types/ku/ws';
 import { HftForgeError } from '@hft-forge/utils';
-import { KuSubscriptionManager } from './ku-ws-api.ku-subscription-manager';
+import { KuSubscriptionManager } from '../../lib/ku-ws-api.ku-subscription-manager';
 
 
 
-describe(KuSubscriptionManager.name, () => {
+describe(`${KuSubscriptionManager.name} | mvp | 000`, () => {
     const id = `LEVEL_2::${Date.now()}` as const;
     const currency: CurrencyPair = '1EARTH-USDT';
     it('Should not get manager', () => {
