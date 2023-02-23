@@ -35,8 +35,8 @@ export class KuSubscriptionManager<T extends Channel> {
         this.id = id;
         // Constructor should be called only after first subscription request, so we are "pending"
         this.status = 'pending';
-        // First time we may subscribe only to [public/private]-only updates
-        this.privacyStatus = privateChannel ? 'private-only' : 'public-only';
+        // First time we may subscribe only to [private-public/private]-only updates
+        this.privacyStatus = privateChannel ? 'private-only' : 'private-public';
         this.channel = channel;
         this.topic = topic_second_splitted_by_comma_part;
         this.isTopicIncluded = true;

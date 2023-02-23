@@ -1,3 +1,4 @@
+import { PrivacyStatus, SubscriptionStatus } from '@hft-forge/types/ku/ws';
 import { KuSubscriptionManager } from './ku-ws-api.ku-subscription-manager';
 
 
@@ -36,6 +37,14 @@ describe(KuSubscriptionManager.name, () => {
         expect(manager.topic[0]).toBe('1EARTH-USDT');
         expect(manager.isTopicIncluded).toBe(true);
         expect(manager.status).toBe('pending');
-        expect(manager.privacyStatus).toBe(false);
+        expect(manager.privacyStatus).toBe('private-public' satisfies PrivacyStatus);
+    });
+
+    it('Should update "status" to "active"', () => {
+        const manager = KuSubscriptionManager.getById(id) as any;
+
+        manager.updateByAck();
+
+        expect(manager.status).toBe('active' satisfies SubscriptionStatus);
     });
 });
