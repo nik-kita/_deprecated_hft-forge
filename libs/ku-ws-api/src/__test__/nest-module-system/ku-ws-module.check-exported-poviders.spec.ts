@@ -1,6 +1,7 @@
-import { HttpService } from '@hft-forge/http';
+import { KuReqService } from '@hft-forge/ku-http-api';
 import { WsClientService } from '@hft-forge/ws';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { KuWsApiModule, KuWsApiService } from '../..';
 
@@ -9,7 +10,7 @@ import { KuWsApiModule, KuWsApiService } from '../..';
 describe('Check exports of /KuWsApiModule/', () => {
 
     @Module({
-        imports: [KuWsApiModule],
+        imports: [KuWsApiModule, ConfigModule.forRoot({ isGlobal: true })],
     })
     class ClientModule { }
 
@@ -38,18 +39,18 @@ describe('Check exports of /KuWsApiModule/', () => {
         await clientApp?.close();
     });
 
-    it(`${KuWsApiService.name} should contain /httpClient/ property ${HttpService.name}`, async () => {
+    it('KuWsApiService should contain /kuReq/ property KuReqService', async () => {
         const clientApp = await Test.createTestingModule({
             imports: [ClientModule],
         }).compile();
 
-        const httpService = clientApp.get(HttpService);
+        const httpService = clientApp.get(KuReqService);
 
-        expect(httpService).toBeInstanceOf(HttpService);
+        expect(httpService).toBeInstanceOf(KuReqService);
 
         const kuWsApiService = clientApp.get(KuWsApiService);
 
-        expect((kuWsApiService as any)['httpClient']).toBeInstanceOf(HttpService);
+        expect((kuWsApiService as any)['kuReq']).toBeInstanceOf(KuReqService);
 
         await clientApp?.close();
     });

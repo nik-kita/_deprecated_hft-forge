@@ -1,5 +1,6 @@
-import { HttpService } from '@hft-forge/http';
+import { KuReqService } from '@hft-forge/ku-http-api';
 import { WsClientService } from '@hft-forge/ws';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { KuWsApiModule } from '../..';
 
@@ -9,7 +10,7 @@ describe('Check all members of /KuWsApiModule/ after its import', () => {
 
     beforeEach(async () => {
         app = await Test.createTestingModule({
-            imports: [KuWsApiModule],
+            imports: [KuWsApiModule, ConfigModule.forRoot({ isGlobal: true })],
         }).compile();
     });
 
@@ -17,14 +18,14 @@ describe('Check all members of /KuWsApiModule/ after its import', () => {
         await app?.close();
     });
 
-    it(`${HttpService.name} and ${WsClientService.name || 'WsClientService'} should be mounted`, () => {
+    it('HttpService and WsClientService should be mounted', () => {
         const kuWsApiModule = app.get(KuWsApiModule);
 
         expect(kuWsApiModule).toBeInstanceOf(KuWsApiModule);
 
-        const httpService = app.get(HttpService);
+        const httpService = app.get(KuReqService);
 
-        expect(httpService).toBeInstanceOf(HttpService);
+        expect(httpService).toBeInstanceOf(KuReqService);
 
         const wsClient = app.get(WsClientService);
 

@@ -28,7 +28,7 @@ describe('Level2 Kucoin subscription', () => {
             envVariables: KU_ENV_KEYS,
         },
     })('Should unsubscribe with "private=true"', (done) => {
-        const id = Date.now().toString();
+        const id = `LEVEL_2::${Date.now()}` as const;
         const messages: any[] = [];
         const receivedTypes = new Set<string>();
         const messagingState = {
@@ -105,7 +105,7 @@ describe('Level2 Kucoin subscription', () => {
                 { type: 'ack' },
                 { type: 'welcome' },
             ];
-        const id = Date.now().toString();
+        const id = `LEVEL_2::${Date.now()}` as const;
         let completed = false;
 
         ws.on('message', (data) => {
@@ -147,7 +147,7 @@ describe('Level2 Kucoin subscription', () => {
             envVariables: KU_ENV_KEYS,
         }
     })('Should unsubscribe from level2', (done) => {
-        const id = Date.now().toString();
+        const id = `LEVEL_2::${Date.now()}` as const;
         const level2_subscription: KuPub<'LEVEL_2'>['PAYLOAD'] = {
             id,
             response: true,

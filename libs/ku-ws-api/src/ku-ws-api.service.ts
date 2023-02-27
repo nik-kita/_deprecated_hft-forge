@@ -1,4 +1,4 @@
-import { HttpService } from '@hft-forge/http';
+import { KuReqService } from '@hft-forge/ku-http-api';
 import { WsClientService } from '@hft-forge/ws';
 import { Injectable } from "@nestjs/common";
 import { Level2_SubscriptionManager } from './lib/level2.subscription-manager';
@@ -7,7 +7,7 @@ import { Level2_SubscriptionManager } from './lib/level2.subscription-manager';
 export class KuWsApiService {
     constructor(
         private wsClient: WsClientService,
-        private httpClient: HttpService,
+        private kuReq: KuReqService,
     ) { }
 
 
