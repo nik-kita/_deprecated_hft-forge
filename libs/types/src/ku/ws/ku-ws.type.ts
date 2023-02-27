@@ -51,13 +51,12 @@ type KuWs = {
                 response: boolean,
             },
             _PAYLOAD: {
-                id: `LEVEL_2::${string}`,
-                channel: '/market/level2:',
+                id: `LEVEL_2::${number}`,
                 type: 'subscribe' | 'unsubscribe',
                 privateChannel: boolean,
                 response: true,
                 topic_first_part: '/market/level2:',
-                topic_second_splitted_by_comma_part: [CurrencyPair, ...CurrencyPair[]] | ['all'],
+                topic_second_splitted_by_comma_part: CurrencyPair[],
             },
         },
         SUB: {
