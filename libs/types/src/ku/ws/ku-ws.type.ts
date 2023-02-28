@@ -1,53 +1,66 @@
 import { CurrencyPair } from "../common";
 
+
 type KuWs = {
     ACK: {
-        pub: never,
-        sub: {
-            payload: {
+        PUB: never,
+        SUB: {
+            PAYLOAD: {
                 id: string,
                 type: 'ack',
             },
         },
     },
     WELCOME: {
-        pub: never,
-        sub: {
-            payload: {
+        PUB: never,
+        SUB: {
+            PAYLOAD: {
                 id: string,
                 type: 'welcome',
             },
         },
     },
     PING_PONG: {
-        pub: {
-            payload: {
+        PUB: {
+            PAYLOAD: {
+                id: string,
+                type: 'ping',
+            },
+            _PAYLOAD: {
                 id: string,
                 type: 'ping',
             },
         },
-        sub: {
-            payload: {
+        SUB: {
+            PAYLOAD: {
                 id: string,
                 type: 'pong',
             },
         },
     },
+    /**
+     * Only channels below have business logic. Channels above are technical.
+     */
     LEVEL_2: {
-        pub: {
-            payload: {
-                id: string | number,
+        PUB: {
+            PAYLOAD: {
+                id: `LEVEL_2::${number}`,
                 type: 'subscribe' | 'unsubscribe',
                 topic: `/market/level2:${string}`,
                 privateChannel: boolean,
                 response: boolean,
             },
-            _private: true,
-            _topic_first_part: '/market/level2:',
-            _topic_second_comma_splitted_part: [CurrencyPair, ...CurrencyPair[]],
+            _PAYLOAD: {
+                id: `LEVEL_2::${number}`,
+                type: 'subscribe' | 'unsubscribe',
+                privateChannel: boolean,
+                response: true,
+                topic_first_part: '/market/level2:',
+                topic_second_splitted_by_comma_part: CurrencyPair[],
+            },
         },
-        sub: {
-            payload: {
+        SUB: {
+            PAYLOAD: {
                 type: 'message',
                 topic: `${'/market/level2:'}${CurrencyPair}`,
                 subject: 'trade.l2update',
@@ -67,7 +80,7 @@ type KuWs = {
 };
 
 export type AnyChannel = keyof KuWs;
-export type Channel = Exclude<AnyChannel, keyof Pick<Record<AnyChannel, never>, 'PING_PONG' | 'WELCOME'>>;
+export type Channel = Exclude<AnyChannel, keyof Pick<Record<AnyChannel, never>, 'PING_PONG' | 'WELCOME' | 'ACK'>>;
 
-export type KuPub<T extends AnyChannel = Channel> = KuWs[T]['pub'];
-export type KuSub<T extends AnyChannel = Channel> = KuWs[T]['sub'];
+export type KuPub<T extends AnyChannel = Channel> = KuWs[T]['PUB'];
+export type KuSub<T extends AnyChannel = Channel> = KuWs[T]['SUB'];

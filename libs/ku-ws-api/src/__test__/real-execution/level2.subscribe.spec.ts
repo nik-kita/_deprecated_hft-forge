@@ -6,7 +6,7 @@ import { WebSocket } from 'ws';
 
 
 
-type _MessageType = KuSub<AnyChannel>['payload']['type'];
+type _MessageType = KuSub<AnyChannel>['PAYLOAD']['type'];
 
 
 describe('Level2 Kucoin subscription', () => {
@@ -28,7 +28,7 @@ describe('Level2 Kucoin subscription', () => {
             envVariables: KU_ENV_KEYS,
         },
     })('Should unsubscribe with "private=true"', (done) => {
-        const id = Date.now().toString();
+        const id = `LEVEL_2::${Date.now()}` as const;
         const messages: any[] = [];
         const receivedTypes = new Set<string>();
         const messagingState = {
@@ -39,7 +39,7 @@ describe('Level2 Kucoin subscription', () => {
 
 
         ws.on('message', (data) => {
-            const message = JSON.parse(data.toString()) as KuSub<AnyChannel>['payload'];
+            const message = JSON.parse(data.toString()) as KuSub<AnyChannel>['PAYLOAD'];
 
             receivedTypes.add(message.type);
             message.type !== 'message' && messages.push(message);
@@ -47,12 +47,12 @@ describe('Level2 Kucoin subscription', () => {
             if (message.type === 'welcome') {
                 expect(messagingState[receivedTypes.size]).toBe('welcome');
 
-                const level2: KuPub<'LEVEL_2'>['payload'] = {
+                const level2: KuPub<'LEVEL_2'>['PAYLOAD'] = {
                     id,
                     response: true,
-                    topic: '/market/level2:USDT-BTC',
+                    topic: '/market/level2:BTC-USDT',
                     type: 'subscribe',
-                    privateChannel: false,
+                    privateChannel: true,
                 };
 
                 ws.send(JSON.stringify(level2));
@@ -63,11 +63,11 @@ describe('Level2 Kucoin subscription', () => {
                 return type === 'ack';
             }).length === 1) {
                 expect(messagingState[receivedTypes.size]).toBe('start-messaging');
-                const level2_unsubscribe: KuPub<'LEVEL_2'>['payload'] = {
+                const level2_unsubscribe: KuPub<'LEVEL_2'>['PAYLOAD'] = {
                     id,
                     privateChannel: true,
                     response: true,
-                    topic: '/market/level2:USDT-BTC',
+                    topic: '/market/level2:BTC-USDT',
                     type: 'unsubscribe',
                 };
 
@@ -105,7 +105,7 @@ describe('Level2 Kucoin subscription', () => {
                 { type: 'ack' },
                 { type: 'welcome' },
             ];
-        const id = Date.now().toString();
+        const id = `LEVEL_2::${Date.now()}` as const;
         let completed = false;
 
         ws.on('message', (data) => {
@@ -127,7 +127,7 @@ describe('Level2 Kucoin subscription', () => {
             }
 
             if (expected?.type === 'welcome') {
-                const level2_subscription: KuPub<'LEVEL_2'>['payload'] = {
+                const level2_subscription: KuPub<'LEVEL_2'>['PAYLOAD'] = {
                     id,
                     response: true,
                     type: 'subscribe',
@@ -147,15 +147,15 @@ describe('Level2 Kucoin subscription', () => {
             envVariables: KU_ENV_KEYS,
         }
     })('Should unsubscribe from level2', (done) => {
-        const id = Date.now().toString();
-        const level2_subscription: KuPub<'LEVEL_2'>['payload'] = {
+        const id = `LEVEL_2::${Date.now()}` as const;
+        const level2_subscription: KuPub<'LEVEL_2'>['PAYLOAD'] = {
             id,
             response: true,
             type: 'subscribe',
             topic: '/market/level2:BTC-USDT',
             privateChannel: false,
         };
-        const level2_unsubscribe: KuPub<'LEVEL_2'>['payload'] = {
+        const level2_unsubscribe: KuPub<'LEVEL_2'>['PAYLOAD'] = {
             ...level2_subscription,
             type: 'unsubscribe',
             privateChannel: false,
