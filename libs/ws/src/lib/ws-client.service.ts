@@ -2,7 +2,9 @@ import { WsReadyState, WS_READY_STATE_V_K } from '@hft-forge/types/common';
 import { qsFromObj } from '@hft-forge/utils';
 import { BindThis } from '@hft-forge/utils/decorators';
 import { Injectable } from "@nestjs/common";
-import { WebSocket } from 'ws';
+import { RawData, WebSocket } from 'ws';
+
+type _OnMessage = (ws: WebSocket, data: RawData, isBinary: boolean) => void;
 @Injectable()
 @BindThis()
 export class WsClientService {
@@ -21,25 +23,31 @@ export class WsClientService {
             ? `${url}?${qsFromObj(data)}`
             : url;
 
-        return new Promise<void>((resolve, reject) => {
-            const onOpenCb = () => {
-                resolve();
+        return new Promise<{
+            onceMessage: (action: _OnMessage) => void,
+            onMessage: (action: _OnMessage) => void,
+        }>((resolve, reject) => {
+            const onOpenCb = (currWs: WebSocket) => {
+                resolve({
+                    onceMessage: (action: _OnMessage) => currWs.once('message', action),
+                    onMessage: (action: _OnMessage) => currWs.on('message', action),
+                });
             };
             const open = () => {
                 this.ws = new WebSocket(_url);
-                this.ws.once('open', onOpenCb);
+                this.ws.once('open', () => onOpenCb(this.ws));
             };
 
             if (!this.ws) {
                 open();
             } else if (this.getWsState() === 'OPEN') {
-                if (this.ws.url === _url) resolve();
+                if (this.ws.url === _url) onOpenCb(this.ws);
                 else {
                     this.ws.once('close', open);
                     this.ws.close();
                 }
             } else if (this.getWsState() === 'CONNECTING') {
-                if (this.ws.url === _url) this.ws.once('open', resolve);
+                if (this.ws.url === _url) this.ws.once('open', onOpenCb);
                 else {
                     this.ws.once('open', () => {
                         this.ws.once('close', open);
