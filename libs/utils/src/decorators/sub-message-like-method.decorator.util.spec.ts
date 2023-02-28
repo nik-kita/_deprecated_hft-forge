@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { WebSocketGateway } from '@nestjs/websockets';
 import { WebSocket } from 'ws';
-import { SubMessageLikeMethod } from '..';
+import { SubMessageLikeMethod } from '.';
 
 const testMethod = 'testMethod' as const;
 

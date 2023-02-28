@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "ES2021",
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
     "types": ["jest", "node"]
@@ -16,5 +17,5 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/**/*.d.ts"
-  ]
+, "../test-pal/src/mocks/__test__/config.module.nest.for-test.util.spec.ts"  ]
 }

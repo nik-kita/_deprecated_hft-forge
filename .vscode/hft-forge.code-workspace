@@ -12,7 +12,11 @@
         {
             "path": "../libs/types/src/forge-store",
             "name": "types/forge-store"
-        }
+        },
+        {
+            "path": "../libs/http/src",
+            "name": "http",
+        },
     ],
     "settings": {},
 }

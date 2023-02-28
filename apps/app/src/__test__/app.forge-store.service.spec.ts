@@ -29,7 +29,7 @@ describe(ForgeStoreService.name, () => {
         const firstDispatch: IMonitor = {
             have: 'USDT',
             want: 'BTC',
-            currency_pair: 'USDT/BTC',
+            currency_pair: 'USDT-BTC',
         };
         const firstDispatchStr = JSON.stringify({
             event,
@@ -53,7 +53,7 @@ describe(ForgeStoreService.name, () => {
         const secondDispatch: IMonitor = {
             have: 'ETH',
             want: 'SHIBA',
-            currency_pair: 'ETH/SHIBA',
+            currency_pair: 'ETH-SHIBA',
         };
         const secondDispatchStr = JSON.stringify({
             event, data: {

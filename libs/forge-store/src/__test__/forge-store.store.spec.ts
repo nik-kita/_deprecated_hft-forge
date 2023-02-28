@@ -7,7 +7,7 @@ const getForgeStateFixture = (state: Partial<ForgeState> = {}): ForgeState => {
         monitor: {
             have: 'hello',
             want: 'world',
-            currency_pair: 'hello/world',
+            currency_pair: 'hello-world',
         },
         ...state,
     };
@@ -42,7 +42,11 @@ describe('ForgeStore', () => {
         let updatesCounter = 0;
 
         FORGE_STORE.subscribe(() => ++updatesCounter);
-        FORGE_STORE.dispatch(actionSetMonitor());
+        FORGE_STORE.dispatch(actionSetMonitor({
+            have: 'ok',
+            want: 'google',
+            currency_pair: 'ok-google'
+        }));
 
         expect(updatesCounter).toBe(1);
     });
