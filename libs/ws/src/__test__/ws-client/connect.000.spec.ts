@@ -5,7 +5,7 @@ import { WsAdapter } from '@nestjs/platform-ws';
 import { WsClientService } from '../../lib/ws-client.service';
 import { MockApp, MockGate } from './mocks';
 
-describe('Check /WsClientService.connect()/', () => {
+describe('WsClientService | .connect() | 000', () => {
     let mockApp: INestApplication;
     let wsUrl: string;
     let client: WsClientService;
