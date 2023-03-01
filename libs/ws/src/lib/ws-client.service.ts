@@ -28,6 +28,11 @@ export class WsClientService {
             const open = () => {
                 this.ws = new WebSocket(_url);
                 this.ws.once('open', onOpenCb);
+                this.ws.on('message', (data) => {
+                    const jData = JSON.parse(data.toString());
+
+                    console.log(jData);
+                });
             };
 
             if (!this.ws) {
