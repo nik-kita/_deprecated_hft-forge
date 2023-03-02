@@ -19,6 +19,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@project/utils": [
+        "libs/utils/src/index.ts"
+      ],
       "@project/ku-http": [
         "libs/ku-http/src/index.ts"
       ],

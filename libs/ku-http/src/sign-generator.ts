@@ -1,5 +1,4 @@
-import { Endpoint, KuReq } from '@project/types/ku/http';
-import { KuEnvKeys } from '@project/types/ku/core';
+import { Endpoint, KuReq, KuEnvKeys } from '@project/types/ku';
 import { qsFromObj } from '@project/utils';
 import * as nodeForge from 'node-forge';
 
