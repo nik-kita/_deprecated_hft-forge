@@ -11,13 +11,24 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "esnext",
-    "lib": ["es2022", "dom"],
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@project/types/ku": ["libs/types/src/ku/index.ts"]
+      "@project/ku-http": [
+        "libs/ku-http/src/index.ts"
+      ],
+      "@project/types/ku": [
+        "libs/types/src/ku/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
