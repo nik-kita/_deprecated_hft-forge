@@ -18,9 +18,21 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@project/types/ku/http": ["libs/types/src/ku/http/index.ts"],
-      "@project/types/ku/core": ["libs/types/src/ku/core/index.ts"],
-      "@project/types/ku/ws": ["libs/types/src/ku/ws/index.ts"],
+      "@project/utils": [
+        "libs/utils/src/index.ts"
+      ],
+      "@project/ku-http": [
+        "libs/ku-http/src/index.ts"
+      ],
+      "@project/types/ku/core": [
+        "libs/types/src/ku/core/index.ts"
+      ],
+      "@project/types/ku/http": [
+        "libs/types/src/ku/http/index.ts"
+      ],
+      "@project/types/ku/ws": [
+        "libs/types/src/ku/ws/index.ts"
+      ]
     }
   },
   "exclude": [

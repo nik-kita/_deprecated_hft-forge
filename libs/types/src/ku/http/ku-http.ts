@@ -74,3 +74,22 @@ export type KuHttp = {
         },
     },
 };
+
+export type Endpoint = keyof KuHttp;
+
+export type KuReq<T extends Endpoint = Endpoint> = [
+    KuHttp[T]['req']['headers'] extends never | void
+    ? { url: KuHttp[T]['url'] }
+    : {
+        url: KuHttp[T]['url'],
+        forSignature: {
+            endpoint: T,
+        } & Omit<KuHttp[T]['req'],
+            Exclude<keyof KuHttp[T]['req'], keyof Partial<KuHttp[T]['req']>>
+            | 'headers'>
+    },
+    Omit<KuHttp[T]['req'],
+        Exclude<keyof KuHttp[T]['req'], keyof Partial<KuHttp[T]['req']>>>
+];
+
+export type KuRes<T extends Endpoint = Endpoint> = KuHttp[T]['res'];

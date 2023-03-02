@@ -1,1 +1,1 @@
-export { KuHttp } from './ku-http';
+export * from './ku-http';
