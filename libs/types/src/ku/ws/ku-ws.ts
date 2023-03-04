@@ -28,6 +28,7 @@ export type KuWs = {
             _PAYLOAD: {
                 id: string | number,
                 type: 'ping',
+                _channel: keyof Pick<KuWs, 'PING_PONG'>,
             },
         },
         SUB: {
@@ -56,6 +57,7 @@ export type KuWs = {
                 response: true,
                 topic_first_part: '/market/level2:',
                 topic_second_splitted_by_comma_part: CurrencyPair[],
+                _channel: keyof Pick<KuWs, 'LEVEL_2'>,
             },
         },
         SUB: {
