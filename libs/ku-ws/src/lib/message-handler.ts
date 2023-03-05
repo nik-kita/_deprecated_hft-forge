@@ -1,6 +1,6 @@
 import {Channel, KuWs, TechChannel} from "@project/types/ku";
 
-type NoSubjectHandler = Record<KuWs['ACK' | 'PING_PONG']['SUB']['PAYLOAD']['type'], (...args: any[]) => void>;
+type NoSubjectHandler = (...args: any[]) => void;
 export class MessageHandler implements Record<KuWs[Channel]['SUB']['PAYLOAD']['subject'], any>{
   private undefined: NoSubjectHandler;
 

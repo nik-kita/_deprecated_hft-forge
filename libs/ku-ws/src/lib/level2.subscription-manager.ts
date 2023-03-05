@@ -27,6 +27,18 @@ export class Level2_subscription_manager implements ISubscriptionManager {
     }
   }
 
+
+  /**
+   *
+   * @deprecated
+   *
+   * This method is not deprecated, BUT!
+   *
+   * You should not call it.
+   *
+   * Why it is not private? Yes it should.
+   * This is choice to the typescript compatibility only for developer purposes.
+   */
   ack({ id }: KuWs['ACK']['SUB']['PAYLOAD']) {
     const removedPayload = this.payloads.delete(id);
 

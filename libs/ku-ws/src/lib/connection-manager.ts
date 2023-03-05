@@ -18,7 +18,7 @@ export class ConnectionManager {
       await this.disconnect();
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<SubscriptionManager>((resolve, reject) => {
       const ws = new WebSocket(`${endpoint}?${qsFromObj({ token, id: Date.now() })}`);
 
       this.ws = ws;

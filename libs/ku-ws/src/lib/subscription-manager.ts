@@ -3,8 +3,23 @@ import { Payload } from '@project/types/ku';
 import {Level2_subscription_manager} from "./level2.subscription-manager";
 import {WebSocket} from "ws";
 import {MessageHandler} from "./message-handler";
+import {ISubscriptionManager} from "./subscription-manager.interface";
 
-export class SubscriptionManager implements Record<keyof Pick<KuWs, Channel | 'PING_PONG'>, any>{
+// TODO add typings and move somewhere in project
+function genNoSubjectCaser(managers: ISubscriptionManager[]) {
+  const caser = {
+    pong(jData) {
+      // TODO,
+    },
+    ack(jData: KuWs['ACK']['SUB']['PAYLOAD']) {
+      void managers.some((m) => m.ack(jData));
+    },
+  }
+
+  return (jData) => caser[jData.type](jData);
+}
+
+export class SubscriptionManager implements Record<keyof Pick<KuWs, Channel | 'PING_PONG'>, any>{k
   private readonly messageHandler: MessageHandler;
 
   public getMessageHandler() {
@@ -16,14 +31,7 @@ export class SubscriptionManager implements Record<keyof Pick<KuWs, Channel | 'P
 
     const managersByChanel = [this.level2];
 
-    this.messageHandler = new MessageHandler({
-      ack(jData: KuWs['ACK']['SUB']['PAYLOAD']) {
-        void managersByChanel.some(this.ack(jData));
-      },
-      pong(jData: KuWs['PING_PONG']['SUB']['PAYLOAD']) {
-        // TODO
-      },
-    });
+    this.messageHandler = new MessageHandler(genNoSubjectCaser(managersByChanel));
   }
   LEVEL_2(firstPayload: Omit<
     Payload<'LEVEL_2'>,
@@ -33,6 +41,8 @@ export class SubscriptionManager implements Record<keyof Pick<KuWs, Channel | 'P
       ...firstPayload,
       type: 'subscribe',
     });
+
+    return this.level2;
   }
   PING_PONG() {
     // TODO
