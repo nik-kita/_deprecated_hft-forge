@@ -16,10 +16,9 @@ export class ConnectionManager {
     if (this.ws) {
       await this.disconnect();
     }
-    
+
     return new Promise((resolve, reject) => {
       const ws = new WebSocket(`${endpoint}?${qsFromObj({ token, id: Date.now() })}`);
-
 
       this.ws = ws;
       ws.once('error', reject);
@@ -36,7 +35,7 @@ export class ConnectionManager {
   }
 
   async disconnect() {
-    if (this.ws) {
+    if (this.ws) { // TODO add more strict check for different "readyState" values
       return new Promise((resolve, reject) => {
         this.ws!.once('error', reject);
         this.ws!.on('close', resolve);
