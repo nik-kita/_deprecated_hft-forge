@@ -1,6 +1,6 @@
 import {CurrencyPair, KuWs, Payload} from "@project/types/ku";
 import {WebSocket} from 'ws';
-import {isSymbol} from "@nestjs/common/utils/shared.utils";
+
 
 type SubscriptionState = {
   id: string | null,
@@ -22,17 +22,18 @@ export class Level2_subscription_manager {
     this.sortedIds.push(payload.id);
 
     if (this.state.id === null) {
-      this.sendByWs(payload, this.countNextState(payload));
+      this.countNextStateMayBeSendByWs(payload);
     }
-
   }
 
   ack({ id }: KuWs['ACK']['SUB']['PAYLOAD']) {
-    const removed = this.payloads.delete(id);
-    void this.sortedIds.shift();
+    const removedPayload = this.payloads.delete(id);
+    const removedId = this.sortedIds.shift();
 
-    if (!removed) {
-      throw new Error('this.payloads should always contain pair for ack.id');
+    if (!removedPayload) { // TODO write tests and rm this check
+      throw new Error();
+    } else if (removedId !== id) { // TODO write tests and rm this check
+      throw new Error();
     }
 
     const nextId = this.sortedIds.shift();
@@ -40,17 +41,17 @@ export class Level2_subscription_manager {
     if (nextId) {
       const payload = this.payloads.get(nextId);
 
-      if (!payload) {
-        throw new Error('this.payloads should contain pair for nextId until it exists');
+      if (!payload) { // TODO write tests and rm this check
+        throw new Error();
       }
 
-      this.sendByWs(payload, this.countNextState(payload));
+      this.countNextStateMayBeSendByWs(payload);
     } else {
       this.state.id = null;
     }
   }
 
-  private countNextState({
+  private countNextStateMayBeSendByWs({
                            id,
                            privateChannel,
                            type,
@@ -92,33 +93,23 @@ export class Level2_subscription_manager {
     if (secondPart.length) {
       nextState.id = id;
       this.state = nextState;
+
+      const _payload: KuWs['LEVEL_2']['PUB']['PAYLOAD'] = {
+        id,
+        response: true,
+        privateChannel,
+        type,
+        topic: `/market/level2:${secondPart.join(',')}`,
+      };
+
+      this.ws.send(JSON.stringify(_payload));
     } else {
       const index = this.sortedIds.findIndex((_id) => _id === id);
 
-      if (index === -1) throw new Error('this.sortedIds should contain this id');
+      if (index === -1) throw new Error(); // TODO write tests and rm this check
 
       void this.sortedIds.splice(index, 1);
+      void this.payloads.delete(id);
     }
-
-    return secondPart;
-  }
-
-  private sendByWs({
-                     id,
-                     privateChannel,
-                     type,
-                   }: Omit<Payload<'LEVEL_2'>, keyof Pick<Payload<'LEVEL_2'>, 'topic_second_splitted_by_comma_part'>>,
-                   symbols: CurrencyPair[]) {
-    if (!symbols.length) return;
-
-    const _payload: KuWs['LEVEL_2']['PUB']['PAYLOAD'] = {
-      id,
-      response: true,
-      privateChannel,
-      type,
-      topic: `/market/level2:${symbols.join(',')}`,
-    };
-
-    this.ws.send(JSON.stringify(_payload));
   }
 }
