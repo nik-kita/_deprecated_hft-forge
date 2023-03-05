@@ -2,8 +2,9 @@ import {Injectable} from "@nestjs/common";
 import {KuHttpService} from "@project/ku-http";
 import {WebSocket} from "ws";
 import {qsFromObj} from "@project/utils";
-import {KuWs} from "@project/types/ku";
+import {Channel, KuWs} from "@project/types/ku";
 import {SubscriptionManager} from "./subscription-manager";
+import {MessageHandler} from "./message-handler";
 
 @Injectable()
 export class ConnectionManager {
@@ -28,8 +29,16 @@ export class ConnectionManager {
         if (jWelcome.type !== 'welcome') { // TODO write tests and rm this check
           throw new Error();
         }
+        const subscriptionManager = new SubscriptionManager(ws);
+        const messageHandler = subscriptionManager.getMessageHandler();
 
-        resolve(new SubscriptionManager(ws));
+        ws.on('message', (message) => {
+          const jMessage = JSON.parse(message.toString()) as KuWs[Channel]['SUB']['PAYLOAD'];
+
+          messageHandler[jMessage.subject](jMessage);
+        });
+
+        resolve(subscriptionManager);
       });
     });
   }

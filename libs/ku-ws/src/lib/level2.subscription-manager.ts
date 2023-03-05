@@ -1,5 +1,6 @@
 import {CurrencyPair, KuWs, Payload} from "@project/types/ku";
 import {WebSocket} from 'ws';
+import {ISubscriptionManager} from "./subscription-manager.interface";
 
 
 type SubscriptionState = {
@@ -7,7 +8,7 @@ type SubscriptionState = {
   privateSymbols: Set<CurrencyPair>,
   publicSymbols: Set<CurrencyPair>,
 };
-export class Level2_subscription_manager {
+export class Level2_subscription_manager implements ISubscriptionManager {
   constructor(private ws: WebSocket) {}
   private payloads = new Map<string, Payload<'LEVEL_2'>>();
   private sortedIds = [] as string[];
@@ -28,11 +29,12 @@ export class Level2_subscription_manager {
 
   ack({ id }: KuWs['ACK']['SUB']['PAYLOAD']) {
     const removedPayload = this.payloads.delete(id);
+
+    if (!removedPayload) return false;
+
     const removedId = this.sortedIds.shift();
 
-    if (!removedPayload) { // TODO write tests and rm this check
-      throw new Error();
-    } else if (removedId !== id) { // TODO write tests and rm this check
+    if (removedId !== id) { // TODO write tests and rm this check
       throw new Error();
     }
 
@@ -49,6 +51,8 @@ export class Level2_subscription_manager {
     } else {
       this.state.id = null;
     }
+
+    return true;
   }
 
   private countNextStateMayBeSendByWs({

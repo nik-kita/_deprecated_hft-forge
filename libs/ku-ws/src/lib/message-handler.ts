@@ -9,6 +9,13 @@ export class MessageHandler implements Record<KuWs[Channel]['SUB']['PAYLOAD']['s
   ] satisfies [
     [Channel, ((jData: KuWs['LEVEL_2']['SUB']['PAYLOAD']) => void)[]]
   ]);
+
+  /**
+   * @deprecated
+   *
+   * It is not deprecated, BUT!
+   * You should get instance of it only from SubscriptionManager.getMessageHandler()
+   */
   constructor(private noSubjectHandler: NoSubjectHandler) {
     this.undefined = noSubjectHandler;
   }
@@ -21,7 +28,7 @@ export class MessageHandler implements Record<KuWs[Channel]['SUB']['PAYLOAD']['s
     return (cb as any).cleaner;
   }
 
-  rmHandler(channel: Channel, cleaner: number) {
+  public rmHandler(channel: Channel, cleaner: number) {
     const channelHandlers = this.handlers.get(channel)!;
 
     const index = channelHandlers.findIndex((cb) => (cb as any).cleaner === cleaner);
@@ -31,6 +38,13 @@ export class MessageHandler implements Record<KuWs[Channel]['SUB']['PAYLOAD']['s
     }
   }
 
+  /**
+   * @deprecated
+   *
+   * It is not deprecated, BUT!
+   * You should not directly call this method!
+   * But dynamically, from message.subject - OK.
+   */
   "trade.l2update"(jData: KuWs['LEVEL_2']['SUB']['PAYLOAD']) {
     this.handlers.get('LEVEL_2' satisfies Channel)!.forEach((cb) => void cb(jData));
   }
