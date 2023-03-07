@@ -11,6 +11,7 @@ type SubscriptionState = {
 export class Level2_subscription_manager implements ISubscriptionManager {
   constructor(private ws: WebSocket) {}
   private payloads = new Map<string, Payload<'LEVEL_2'>>();
+  private sends = new Map<string, (skipped: boolean) => void>()
   private sortedIds = [] as string[];
 
   private state: SubscriptionState = {
@@ -25,6 +26,10 @@ export class Level2_subscription_manager implements ISubscriptionManager {
     if (this.state.id === null) {
       this.countNextStateMayBeSendByWs(payload);
     }
+
+    return new Promise((resolve, reject) => {
+      this.sends.set(payload.id, (skipped = false) => resolve(skipped));
+    });
   }
 
 
@@ -49,6 +54,14 @@ export class Level2_subscription_manager implements ISubscriptionManager {
     if (removedId !== id) { // TODO write tests and rm this check
       throw new Error();
     }
+
+    const sended = this.sends.get(removedId);
+
+    if (!sended) { // TODO write tests and rm this check
+      throw new Error();
+    }
+
+    sended(true);
 
     const nextId = this.sortedIds.shift();
 
@@ -124,6 +137,13 @@ export class Level2_subscription_manager implements ISubscriptionManager {
 
       if (index === -1) throw new Error(); // TODO write tests and rm this check
 
+      const notSended = this.sends.get(id);
+
+      if (!notSended) { // TODO write tests and rm this check
+        throw new Error();
+      }
+
+      notSended(false);
       void this.sortedIds.splice(index, 1);
       void this.payloads.delete(id);
     }
