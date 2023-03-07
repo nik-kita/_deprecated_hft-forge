@@ -33,14 +33,18 @@ export class SubscriptionManager implements Record<keyof Pick<KuWs, Channel | 'P
 
     this.messageHandler = new MessageHandler(genNoSubjectCaser(managersByChanel));
   }
-  LEVEL_2(firstPayload: Omit<
+  async LEVEL_2(firstPayload: Omit<
     Payload<'LEVEL_2'>,
     keyof Pick<Payload<'LEVEL_2'>, 'type'>
   >) {
-    this.level2.send({
+    const isSended = await this.level2.send({
       ...firstPayload,
       type: 'subscribe',
     });
+
+    if (!isSended) { // TODO write tests and rm this check
+      throw new Error();
+    }
 
     return this.level2;
   }
