@@ -1,14 +1,15 @@
 # ku-http
 
-This library was generated with [Nx](https://nx.dev).
 
+* [`KuHttp` - the main accumulated type](../types/src/ku/http/ku-http.ts)
 
-## Running unit tests
+---
 
-Run `nx test ku-http` to execute the unit tests via [Jest](https://jestjs.io).
-
-
-## Running lint
-
-Run `nx lint ku-http` to execute the lint via [ESLint](https://eslint.org/).
-
+* [`SignGenerator`](./src/sign-generator.ts)
+  * Most of the important http requests require `API_KEY` & `API_SECRET`
+    * you should store them in `.production.env` (for tests `.test.env`)
+  * This class should be invisible for client's code
+* [`KuHttpService`](./src/ku-http.service.ts)
+  > Is a service that provide simple usage for KuCoin Http API
+* [`KuHttpModule`](./src/ku-http.module.ts)
+  > Standard Nest.js module
